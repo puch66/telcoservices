@@ -13,7 +13,7 @@
 		
 		<!-- Personal CSS -->
     	<link rel=stylesheet href="static/styles/general.css" type="text/css">		
-    	
+    		
 	</head>
 	<body>
 		<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
@@ -28,7 +28,7 @@
 			          <a class="nav-link telcotext" aria-current="page" href="/TelcoServiceWeb/home">Home</a>
 			        </li>
 			        <li class="nav-item">
-			          <a class="nav-link telcotext active" href="#">Buy services</a>
+			          <a class="nav-link telcotext active" href="/TelcoServiceWeb/buyservices">Buy services</a>
 			        </li>
 			        <li th:if="${session.user != null}" class="nav-item dropdown">
 				          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,15 +49,39 @@
 		
 		<div align="left">
 			<p>Here you will be able to buy the service that you like</p>
-			<form method="GET" action="/TelcoServiceWeb/buyservices">
+			
+			<!-- select package if no one already selected -->
+			<form th:if="${packageSelected} == null" method="GET" action="/TelcoServiceWeb/buyservices" id="form">
 					<h3 class="telcotext">Select the package you want to buy</h3>
-					<select class="form-select" aria-label="Default select example">
-						 <option selected>Select</option>
-						 <option th:each="p : ${packages}" th:text="${p.name}" th:value="${p.name}" th:id="${p.name}">
-						 </option>
+						
+					<select class="form-select" id="packageSelect" name="packageSelect">
+						<option selected>Select</option>
+						<option th:each="p : ${packages}" th:text="${p}" th:name="${p}" th:value="${p}" th:id="${p}">
+						</option>
 					</select>
-					<input type="text" id="prova">
 					<input type="submit" class="btn btn-success telcotext" value="Confirm">
+			</form>
+					
+			<!-- otherwise, display form for package data selection -->
+			<form th:unless="${packageSelected} == null" method="POST" action="/TelcoServiceWeb/confirm" id="form">
+				<select class="form-select" name="packageSelect" disabled>
+					<option th:text="${packageSelected.name}" selected></option>
+				</select>
+				<input type="hidden" name="packageSelect" th:value="${packageSelected.name}">
+				<select class="form-select" id="validityPeriod" name="validityPeriod">
+					<option selected>Select</option>
+					<option th:each="v : ${packageSelected.validityPeriods}" th:text="${v.fee}" th:name="${v.fee}" th:value="${v.fee}" th:id="${v.fee}">
+					</option>
+				</select>
+				<div class="form-check">
+				  <div th:each="pr : ${packageSelected.products}">
+				  	<input class="form-check-input" type="checkbox" th:name="${pr.name}" th:id="${pr.name}">
+				  	<label class="form-check-label" th:for="${pr.name}" th:text="${pr.name}"></label>
+				  </div> 
+				</div>
+				<h3>Select start date of subscription</h3>
+				<input type="date" name="startDate">
+				<input type="submit" class="btn btn-success telcotext" value="Confirm">
 			</form>
 		</div>
 	</body>

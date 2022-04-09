@@ -1,6 +1,7 @@
 package it.polimi.db2.telcoservice.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -17,17 +18,21 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import it.polimi.db2.telco.entities.Product;
 import it.polimi.db2.telco.entities.ServicePackage;
 import it.polimi.db2.telco.services.ServicePackageService;
 
-@WebServlet("/buyservices")
-public class BuyServices extends HttpServlet {
+/**
+ * Servlet implementation class Confirm
+ */
+@WebServlet("/confirm")
+public class Confirm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
 	@EJB(name = "it.polimi.db2.telco.services/ServicePackageService")
 	private ServicePackageService spService;
-
-    public BuyServices() {
+    
+    public Confirm() {
         super();
     }
     
@@ -40,27 +45,31 @@ public class BuyServices extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String packageSelectName = StringEscapeUtils.escapeJava(request.getParameter("packageSelect"));
-		
-		String path = "/WEB-INF/buy_service.html";
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String path = "/WEB-INF/confirmation_page.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		if(packageSelectName == null || packageSelectName.equals("Select")) {
-			List<String> packages = spService.findAllPackageNames();
-			ctx.setVariable("packages", packages);
-			templateEngine.process(path, ctx, response.getWriter());
+		String validityPeriod = StringEscapeUtils.escapeJava(request.getParameter("validityPeriod"));
+		String packageSelectName = StringEscapeUtils.escapeJava(request.getParameter("packageSelect"));
+		ServicePackage packageSelected = spService.findFormPackage(packageSelectName);
+		ctx.setVariable("packageSelected",packageSelected);
+		ctx.setVariable("validityPeriod",validityPeriod);
+		
+		List<Product> optSelect = new ArrayList<Product>();
+		String reqproduct;
+		int totProductFees = 0;
+		for(Product p: packageSelected.getProducts()) {
+			reqproduct = StringEscapeUtils.escapeJava(request.getParameter(p.getName()));
+			if(reqproduct != null) {
+				optSelect.add(p);
+				totProductFees+=p.getFee();
+			}
 		}
-		else {
-			ServicePackage packageSelected = spService.findFormPackage(packageSelectName);
-			ctx.setVariable("packageSelected",packageSelected);
-			templateEngine.process(path, ctx, response.getWriter());
-		}
-	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		ctx.setVariable("selectedProducts", optSelect);
+		ctx.setVariable("totProductFees", totProductFees);
+		
+		templateEngine.process(path, ctx, response.getWriter());
 	}
 
 }

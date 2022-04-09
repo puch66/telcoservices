@@ -21,7 +21,15 @@ public class ServicePackageService {
     }
     
     public List<ServicePackage> findAllPackages() {
-		return em.createNamedQuery("ServicePackage.findAll", ServicePackage.class).getResultList();
+    	return em.createNamedQuery("ServicePackage.findAll", ServicePackage.class).getResultList();
+    }
+    
+    public List<String> findAllPackageNames() {
+		return em.createNamedQuery("ServicePackage.findAllPackageNames", String.class).getResultList();
 	}
+    
+    public ServicePackage findFormPackage(String name) {
+    	return em.createNamedQuery("ServicePackage.findFormPackage", ServicePackage.class).setParameter(1, name).getSingleResult();
+    }
 
 }

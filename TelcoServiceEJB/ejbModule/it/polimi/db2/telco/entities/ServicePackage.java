@@ -12,6 +12,8 @@ import java.util.List;
 @Entity
 @Table(name="servicePackage")
 @NamedQuery(name="ServicePackage.findAll", query="SELECT s FROM ServicePackage s")
+@NamedQuery(name="ServicePackage.findAllPackageNames", query="SELECT s.name FROM ServicePackage s")
+@NamedQuery(name="ServicePackage.findFormPackage", query="SELECT s FROM ServicePackage s WHERE s.name = ?1")
 public class ServicePackage implements Serializable {
 	private static final long serialVersionUID = 1L;
 

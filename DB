@@ -1,0 +1,141 @@
+/*drop table if exists telcodb.customer;
+create table telcodb.customer 
+	( 
+		username varchar(50),
+        password varchar(50) NOT NULL,
+        email varchar(50) UNIQUE NOT NULL,
+        isInsolvent int NOT NULL DEFAULT 0,
+        PRIMARY KEY (username),
+        CONSTRAINT positive_insolvent CHECK (isInsolvent >= 0)
+	);
+insert into telcodb.customer values ('test','test','test@123.com', default);
+select * from telcodb.customer;*/
+
+/*drop table if exists telcodb.servicePackage;
+create table telcodb.servicePackage
+	(
+		id int NOT NULL auto_increment,
+        name varchar(50) UNIQUE NOT NULL,
+        PRIMARY KEY (id)
+    );
+    
+insert into telcodb.servicePackage values (1,'Basic');
+insert into telcodb.servicePackage values (2,'Family');
+insert into telcodb.servicePackage values (3,'Business');
+insert into telcodb.servicePackage values (4,'All Inclusive');*/
+    
+/*drop table if exists telcodb.validityPeriod;
+create table validityPeriod
+	(	
+		id int NOT NULL auto_increment,
+        duration int NOT NULL,
+        fee int NOT NULL,
+        servicePackage int NOT NULL,
+        PRIMARY KEY (id),
+        #PRIMARY KEY (duration,servicePackage),
+        CONSTRAINT id_package FOREIGN KEY (servicePackage) REFERENCES telcodb.servicePackage (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT duration_12_24_36 CHECK (duration = 12 or duration = 24 or duration = 36)
+    );
+    
+insert into telcodb.validityPeriod values (1, 12, 20, 1), (2, 24, 18, 1), (3, 36, 15, 1);
+insert into telcodb.validityPeriod values (4, 12, 30, 2), (5, 24, 24, 2), (6, 36, 22, 2);
+insert into telcodb.validityPeriod values (7, 12, 25, 3), (8, 24, 24, 3), (9, 36, 23, 3);
+insert into telcodb.validityPeriod values (10, 12, 20, 4), (11, 24, 18, 4), (12, 36, 15, 4);*/
+
+#select * from telcodb.package p join telcodb.validityPeriod v on p.id = v.servicePackage;
+    
+/*drop table if exists telcodb.service;
+create table telcodb.service
+	(
+		id int NOT NULL auto_increment,
+        serPackage int,
+        PRIMARY KEY (id),
+        CONSTRAINT id_package2 FOREIGN KEY (serPackage) REFERENCES telcodb.servicePackage (id) ON DELETE CASCADE ON UPDATE CASCADE 
+    );
+
+insert into telcodb.service values (1,1), (2,2), (3,2), (4,3), (5,4), (6,4), (7,4);
+
+drop table if exists telcodb.mobilephoneservice;
+create table telcodb.mobilephoneservice
+	(
+		id_mobile_phone int PRIMARY KEY REFERENCES telcodb.service (id),
+        num_minutes int,
+        num_SMS int,
+        fee_extra_min int,
+        fee_extra_SMS int
+    );
+
+drop table if exists telcodb.fixedphoneservice;
+create table telcodb.fixedphoneservice
+	(
+		id_fixed_phone int PRIMARY KEY REFERENCES telcodb.service (id)
+    );
+
+drop table if exists telcodb.mobileinternetservice;
+create table telcodb.mobileinternetservice
+	(
+		id_mobile_internet int PRIMARY KEY REFERENCES telcodb.service (id),
+        num_GB int,
+        fee_extra_GB int
+    );
+
+drop table if exists telcodb.fixedinternetservice;
+create table telcodb.fixedinternetservice
+	(
+		id_fixed_internet int PRIMARY KEY REFERENCES telcodb.service (id),
+        num_GB int,
+        fee_extra_GB int
+    );*/
+
+/*drop table if exists telcodb.product;
+create table telcodb.product
+	(
+		name varchar(50) NOT NULL,
+        fee int NOT NULL,
+        PRIMARY KEY (name)
+    );
+
+insert into telcodb.product values('SMS news feed', 10), ('Internet TV channel', 20), ('5G connection', 6), ('Formula1', 15), ('Football', 30);
+    
+drop table if exists telcodb.optProductsForPackage;
+create table telcodb.optProductsForPackage
+	(
+		product varchar(50) NOT NULL,
+        servicepackage int NOT NULL,
+        PRIMARY KEY (product, servicepackage),
+        CONSTRAINT id_product FOREIGN KEY (product) REFERENCES telcodb.product (name) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT id_package3 FOREIGN KEY (servicepackage) REFERENCES telcodb.servicePackage (id) ON DELETE CASCADE ON UPDATE CASCADE 
+    );
+
+insert into telcodb.optProductsForPackage values ('SMS news feed', 2), ('5G connection', 2);
+insert into telcodb.optProductsForPackage values ('Internet TV channel', 3), ('Formula1', 3), ('Football', 3);
+insert into telcodb.optProductsForPackage values ('SMS news feed', 4), ('5G connection', 4), ('Internet TV channel', 4), ('Formula1', 4), ('Football', 4);*/
+
+/*drop table if exists telcodb.customOrder;
+create table telcodb.customOrder
+	(
+		id int NOT NULL auto_increment,
+        creationDate datetime NOT NULL,
+        username varchar(50) NOT NULL,
+        servicePackage int NOT NULL,
+        validity int NOT NULL,
+        totalValue int NOT NULL,
+        startDate date NOT NULL,
+        PRIMARY KEY(id),
+        CONSTRAINT id_user FOREIGN KEY (username) REFERENCES telcodb.customer (username) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT id_service4 FOREIGN KEY (servicePackage) REFERENCES telcodb.servicePackage (id),
+        CONSTRAINT id_validity FOREIGN KEY (validity) REFERENCES telcodb.validityPeriod (id)
+    );
+    
+drop table if exists telcodb.selectedProductsForOrder;
+create table telcodb.selectedProductsForOrder
+	(
+		product varchar(50) NOT NULL,
+        customOrder int NOT NULL,
+        PRIMARY KEY (product, customOrder),
+        CONSTRAINT id_product2 FOREIGN KEY (product) REFERENCES telcodb.product (name),
+        CONSTRAINT id_order FOREIGN KEY (customOrder) REFERENCES telcodb.customOrder (id)
+    );*/
+    
+#select * from telcodb.customOrder;
+#select * from telcodb.selectedProductsForOrder;

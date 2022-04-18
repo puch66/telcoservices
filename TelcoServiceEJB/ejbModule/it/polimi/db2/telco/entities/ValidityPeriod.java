@@ -2,6 +2,7 @@ package it.polimi.db2.telco.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -20,6 +21,10 @@ public class ValidityPeriod implements Serializable {
 	private int duration;
 
 	private int fee;
+
+	//bi-directional many-to-one association to CustomOrder
+	@OneToMany(mappedBy="validityPeriod")
+	private List<CustomOrder> customOrders;
 
 	//bi-directional many-to-one association to ServicePackage
 	@ManyToOne
@@ -51,6 +56,28 @@ public class ValidityPeriod implements Serializable {
 
 	public void setFee(int fee) {
 		this.fee = fee;
+	}
+
+	public List<CustomOrder> getCustomOrders() {
+		return this.customOrders;
+	}
+
+	public void setCustomOrders(List<CustomOrder> customOrders) {
+		this.customOrders = customOrders;
+	}
+
+	public CustomOrder addCustomOrder(CustomOrder customOrder) {
+		getCustomOrders().add(customOrder);
+		customOrder.setValidityPeriod(this);
+
+		return customOrder;
+	}
+
+	public CustomOrder removeCustomOrder(CustomOrder customOrder) {
+		getCustomOrders().remove(customOrder);
+		customOrder.setValidityPeriod(null);
+
+		return customOrder;
 	}
 
 	public ServicePackage getServicePackageBean() {

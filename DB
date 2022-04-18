@@ -121,6 +121,7 @@ create table telcodb.customOrder
         validity int NOT NULL,
         totalValue int NOT NULL,
         startDate date NOT NULL,
+        isValid int NOT NULL,
         PRIMARY KEY(id),
         CONSTRAINT id_user FOREIGN KEY (username) REFERENCES telcodb.customer (username) ON DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT id_service4 FOREIGN KEY (servicePackage) REFERENCES telcodb.servicePackage (id),
@@ -139,3 +140,4 @@ create table telcodb.selectedProductsForOrder
     
 #select * from telcodb.customOrder;
 #select * from telcodb.selectedProductsForOrder;
+#select * from telcodb.customer;

@@ -48,18 +48,30 @@
 		</nav>
 		
 		<h3>Summary details:</h3>
+<!--  p th:text="${#dates.format(session.order.creationDate, 'dd-MM-yyyy HH:mm')}"></p -->
 		<ul>
-			<li>Service name: <span th:text="${packageSelected.name}"></span></li>
-			<li>Services offered: <span th:each="s : ${packageSelected.services}" th:text="${s.id}"></span></li>
+			<li>Service name: <span th:text="${session.order.servicePackageBean.name}"></span></li>
+			<li>Services offered: <span th:each="s : ${session.order.servicePackageBean.services}" th:text="${s.id}"></span></li>
 			<li>Available optional products:</li>
-			<ul th:unless="${#lists.isEmpty(selectedProducts)}">
-				<li th:each="pr : ${selectedProducts}">
+			<ul th:unless="${#lists.isEmpty(session.order.products)}">
+				<li th:each="pr : ${session.order.products}">
 					<span th:text="${pr.name}"></span>
 				</li>
 			</ul>
-			<li>Validity period: <span th:text="${validityPeriod}"></span> euros for --I have to manage this but let's say 15-- months</li>
-			<li>Total price: <span th:text="${validityPeriod}*15+15*${totProductFees}"></span> euros</li>
-			
+			<li>Validity period: <span th:text="${session.order.validityPeriod.fee}"></span> euros for <span th:text="${session.order.validityPeriod.duration}"></span> months</li>
+			<li>Total price: <span th:text="${session.order.totalValue}"></span> euros</li>
 		</ul>
+		
+		<form th:unless="${session.user} == null" method="POST" action="/TelcoServiceWeb/createOrder">
+			<input type="text" name="isValid" value="1" hidden="true">
+			<input type="submit" value="BUY-SUCCESS">
+		</form>
+		
+		<form th:unless="${session.user} == null" method="POST" action="/TelcoServiceWeb/createOrder">
+			<input type="text" name="isValid" value="0" hidden="true">
+			<input type="submit" value="BUY-FAIL">
+		</form>
+		
+		<a th:if="${session.user} == null" href="/TelcoServiceWeb/">Login or register in order to proceed with the order</a>
 	</body>
 </html>

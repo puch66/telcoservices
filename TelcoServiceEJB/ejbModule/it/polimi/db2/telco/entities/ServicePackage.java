@@ -22,6 +22,10 @@ public class ServicePackage implements Serializable {
 
 	private String name;
 
+	//bi-directional many-to-one association to CustomOrder
+	@OneToMany(mappedBy="servicePackageBean")
+	private List<CustomOrder> customOrders;
+
 	//bi-directional many-to-many association to Product
 	@ManyToMany
 	@JoinTable(
@@ -60,6 +64,28 @@ public class ServicePackage implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<CustomOrder> getCustomOrders() {
+		return this.customOrders;
+	}
+
+	public void setCustomOrders(List<CustomOrder> customOrders) {
+		this.customOrders = customOrders;
+	}
+
+	public CustomOrder addCustomOrder(CustomOrder customOrder) {
+		getCustomOrders().add(customOrder);
+		customOrder.setServicePackageBean(this);
+
+		return customOrder;
+	}
+
+	public CustomOrder removeCustomOrder(CustomOrder customOrder) {
+		getCustomOrders().remove(customOrder);
+		customOrder.setServicePackageBean(null);
+
+		return customOrder;
 	}
 
 	public List<Product> getProducts() {

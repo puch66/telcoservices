@@ -43,6 +43,7 @@ public class CustomerService {
 			customer.setEmail(email);
 			//ADD TRY CATCH -- not working
 			em.persist(customer);
+			//em.flush();
 		} catch (PersistenceException e) {
 			throw new BadCredentialsException("Could not register customer");
 		}

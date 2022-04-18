@@ -1,7 +1,11 @@
 package it.polimi.db2.telcoservice.controllers;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -18,8 +22,13 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import it.polimi.db2.telco.entities.CustomOrder;
+import it.polimi.db2.telco.entities.Customer;
 import it.polimi.db2.telco.entities.Product;
 import it.polimi.db2.telco.entities.ServicePackage;
+import it.polimi.db2.telco.entities.ValidityPeriod;
+import it.polimi.db2.telco.exceptions.BadCredentialsException;
+import it.polimi.db2.telco.services.CustomOrderService;
 import it.polimi.db2.telco.services.ServicePackageService;
 
 /**
@@ -31,6 +40,8 @@ public class Confirm extends HttpServlet {
 	private TemplateEngine templateEngine;
 	@EJB(name = "it.polimi.db2.telco.services/ServicePackageService")
 	private ServicePackageService spService;
+	@EJB(name = "it.polimi.db2.telco.services/CustomOrderService")
+	private CustomOrderService customOrderService;
     
     public Confirm() {
         super();
@@ -50,11 +61,27 @@ public class Confirm extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
-		String validityPeriod = StringEscapeUtils.escapeJava(request.getParameter("validityPeriod"));
+		String sDate = StringEscapeUtils.escapeJava(request.getParameter("startDate"));
+		Date startDate = Calendar.getInstance().getTime();
+		try {
+			startDate = new SimpleDateFormat("yyyy-MM-dd").parse(sDate);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		
+		Customer customer = (Customer) request.getSession().getAttribute("user");
+		
+		String feeAndDuration = StringEscapeUtils.escapeJava(request.getParameter("validityPeriod"));
+		String[] validityPeriod = feeAndDuration.split("-");
+		
 		String packageSelectName = StringEscapeUtils.escapeJava(request.getParameter("packageSelect"));
 		ServicePackage packageSelected = spService.findFormPackage(packageSelectName);
-		ctx.setVariable("packageSelected",packageSelected);
-		ctx.setVariable("validityPeriod",validityPeriod);
+		
+		ValidityPeriod validity = null;
+		for(ValidityPeriod vp: packageSelected.getValidityPeriods() ) {
+			if(vp.getFee() == Integer.parseInt(validityPeriod[0]) && vp.getDuration() == Integer.parseInt(validityPeriod[1]))
+				validity = vp;
+		}
 		
 		List<Product> optSelect = new ArrayList<Product>();
 		String reqproduct;
@@ -66,8 +93,16 @@ public class Confirm extends HttpServlet {
 				totProductFees+=p.getFee();
 			}
 		}
-		ctx.setVariable("selectedProducts", optSelect);
-		ctx.setVariable("totProductFees", totProductFees);
+		
+		int totalValue = (totProductFees+Integer.parseInt(validityPeriod[0]))*Integer.parseInt(validityPeriod[1]);
+		
+		try {
+			CustomOrder order = customOrderService.createAbstractOrder(startDate, totalValue, customer, packageSelected, validity, optSelect);
+			request.getSession().setAttribute("order", order);
+		} catch (BadCredentialsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		templateEngine.process(path, ctx, response.getWriter());
 	}

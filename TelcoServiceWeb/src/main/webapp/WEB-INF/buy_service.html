@@ -70,7 +70,7 @@
 				<input type="hidden" name="packageSelect" th:value="${packageSelected.name}">
 				<select class="form-select" id="validityPeriod" name="validityPeriod">
 					<option selected>Select</option>
-					<option th:each="v : ${packageSelected.validityPeriods}" th:text="${v.fee}" th:name="${v.fee}" th:value="${v.fee}" th:id="${v.fee}">
+					<option th:each="v : ${packageSelected.validityPeriods}" th:text="${v.fee}+' for '+${v.duration}+' months'" th:name="${v.fee}+'-'+${v.duration}" th:value="${v.fee}+'-'+${v.duration}" th:id="${v.fee}+'-'+${v.duration}">
 					</option>
 				</select>
 				<div class="form-check">

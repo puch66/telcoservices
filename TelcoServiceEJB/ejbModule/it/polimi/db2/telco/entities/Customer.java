@@ -2,6 +2,7 @@ package it.polimi.db2.telco.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -22,6 +23,10 @@ public class Customer implements Serializable {
 	private int isInsolvent;
 
 	private String password;
+
+	//bi-directional many-to-one association to CustomOrder
+	@OneToMany(mappedBy="customer")
+	private List<CustomOrder> customOrders;
 
 	public Customer() {
 	}
@@ -56,6 +61,28 @@ public class Customer implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public List<CustomOrder> getCustomOrders() {
+		return this.customOrders;
+	}
+
+	public void setCustomOrders(List<CustomOrder> customOrders) {
+		this.customOrders = customOrders;
+	}
+
+	public CustomOrder addCustomOrder(CustomOrder customOrder) {
+		getCustomOrders().add(customOrder);
+		customOrder.setCustomer(this);
+
+		return customOrder;
+	}
+
+	public CustomOrder removeCustomOrder(CustomOrder customOrder) {
+		getCustomOrders().remove(customOrder);
+		customOrder.setCustomer(null);
+
+		return customOrder;
 	}
 
 }

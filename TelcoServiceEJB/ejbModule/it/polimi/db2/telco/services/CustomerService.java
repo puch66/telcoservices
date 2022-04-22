@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import it.polimi.db2.telco.entities.CustomOrder;
 import it.polimi.db2.telco.entities.Customer;
 import it.polimi.db2.telco.exceptions.BadCredentialsException;
 
@@ -47,6 +48,11 @@ public class CustomerService {
 		} catch (PersistenceException e) {
 			throw new BadCredentialsException("Could not register customer");
 		}
+	}
+	
+	public void addInsolvence(CustomOrder order) {
+		Customer customer = em.find(Customer.class, order.getCustomer().getUsername());
+		customer.setIsInsolvent(customer.getIsInsolvent()+1);
 	}
 
 }

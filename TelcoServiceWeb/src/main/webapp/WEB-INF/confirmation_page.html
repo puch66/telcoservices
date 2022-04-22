@@ -72,6 +72,6 @@
 			<input type="submit" value="BUY-FAIL">
 		</form>
 		
-		<a th:if="${session.user} == null" href="/TelcoServiceWeb/">Login or register in order to proceed with the order</a>
+		<a th:if="${session.user} == null" href="/TelcoServiceWeb/?redirect=true">Login or register in order to proceed with the order</a>
 	</body>
 </html>

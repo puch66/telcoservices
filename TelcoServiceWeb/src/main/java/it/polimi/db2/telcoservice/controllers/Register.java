@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -67,12 +66,10 @@ public class Register extends HttpServlet {
 			return;
 		}
 		
-		String path;
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("errorMsg", "Incorrect username or password");
-		path = "/index.html";
-		templateEngine.process(path, ctx, response.getWriter());
+		String path = getServletContext().getContextPath() + "/";
+		String redirect = StringEscapeUtils.escapeJava(request.getParameter("redirect"));
+		if(redirect != null) path += "?redirect=" + redirect;
+		response.sendRedirect(path);
 	}
 
 }

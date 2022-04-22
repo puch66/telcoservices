@@ -1,13 +1,16 @@
 package it.polimi.db2.telco.services;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 
 import it.polimi.db2.telco.entities.CustomOrder;
 import it.polimi.db2.telco.entities.Customer;
@@ -44,8 +47,20 @@ public class CustomOrderService {
 		}
 	}
     
+    @Transactional
     public void persistOrder(CustomOrder order) {
     	em.persist(order);
+    	em.flush(); //do I need this?
+    	List<Product> productsToAdd = new ArrayList<>(order.getProducts());
+    	for(Product p:productsToAdd) {
+    		this.addToOrderedProduct(p.getName(), order.getId());
+    	}
+    }
+    
+    public void addToOrderedProduct(String p, int c) {
+    	Product pr = em.find(Product.class,p);
+    	CustomOrder co = em.find(CustomOrder.class, c);
+    	co.addProduct(pr);
     }
 
 }

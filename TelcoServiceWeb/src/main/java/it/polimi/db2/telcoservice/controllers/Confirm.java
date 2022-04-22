@@ -106,5 +106,16 @@ public class Confirm extends HttpServlet {
 		
 		templateEngine.process(path, ctx, response.getWriter());
 	}
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		CustomOrder order = (CustomOrder) request.getSession().getAttribute("order");
+		order.setCustomer((Customer) request.getSession().getAttribute("user"));
+		request.getSession().setAttribute("order", order);
+		
+		String path = "/WEB-INF/confirmation_page.html";
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		templateEngine.process(path, ctx, response.getWriter());
+	}
 
 }

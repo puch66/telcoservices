@@ -17,6 +17,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.db2.telco.entities.CustomOrder;
 import it.polimi.db2.telco.services.CustomOrderService;
+import it.polimi.db2.telco.services.CustomerService;
 
 /**
  * Servlet implementation class CreateOrder
@@ -27,6 +28,8 @@ public class CreateOrder extends HttpServlet {
 	private TemplateEngine templateEngine;
 	@EJB(name = "it.polimi.db2.telco.services/CustomOrderService")
 	private CustomOrderService customOrderService;
+	@EJB(name = "it.polimi.db2.telco.services/CustomerService")
+	private CustomerService customerService;
 	
     public CreateOrder() {
         super();
@@ -45,9 +48,8 @@ public class CreateOrder extends HttpServlet {
 		CustomOrder order = (CustomOrder) request.getSession().getAttribute("order");
 		String isValid = StringEscapeUtils.escapeJava(request.getParameter("isValid"));
 		order.setIsValid(Integer.parseInt(isValid));
-		
-		//NON BASTA!
-		if(isValid.equals("0")) order.getCustomer().setIsInsolvent(order.getCustomer().getIsInsolvent()+1);//set the user as insolvent
+
+		if(isValid.equals("0")) customerService.addInsolvence(order);//set the user as insolvent
 		else;//create a service activation schedule
 		customOrderService.persistOrder(order);
 		

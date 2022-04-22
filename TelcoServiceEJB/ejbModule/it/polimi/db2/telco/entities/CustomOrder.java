@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="customOrder")
-@NamedQuery(name="CustomOrder.findAll", query="SELECT c FROM CustomOrder c")
+@NamedQuery(name="Customer.findRejectedOrders", query="SELECT o FROM CustomOrder o where o.customer = ?1")
 public class CustomOrder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -114,6 +114,11 @@ public class CustomOrder implements Serializable {
 
 	public void setProducts(List<Product> products) {
 		this.products = products;
+	}
+	
+	public void addProduct(Product p) {
+		this.getProducts().add(p);
+		p.getCustomOrders().add(this);
 	}
 
 	public int getIsValid() {

@@ -66,7 +66,7 @@ public class Register extends HttpServlet {
 			return;
 		}
 		
-		String path = getServletContext().getContextPath() + "/";
+		String path = getServletContext().getContextPath() + "/index";
 		String redirect = StringEscapeUtils.escapeJava(request.getParameter("redirect"));
 		if(redirect != null) path += "?redirect=" + redirect;
 		response.sendRedirect(path);

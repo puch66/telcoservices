@@ -141,3 +141,54 @@ create table telcodb.selectedProductsForOrder
 #select * from telcodb.customOrder;
 #select * from telcodb.selectedProductsForOrder;
 #select * from telcodb.customer;
+
+/*drop table if exists telcodb.serviceActivationSchedule;
+create table  telcodb.serviceActivationSchedule
+	(
+		id int NOT NULL auto_increment,
+        username varchar(50) NOT NULL,
+        activationDate date NOT NULL,
+        deactivationDate date NOT NULL,
+        CONSTRAINT id_customer FOREIGN KEY (username) REFERENCES telcodb.customer (username),
+        PRIMARY KEY(id)
+    );
+    
+drop table if exists telcodb.productsForActivationSchedule;
+create table  telcodb.productsForActivationSchedule
+	(
+		product varchar(50) NOT NULL,
+        activationSchedule int NOT NULL,
+        PRIMARY KEY (product, activationSchedule),
+        CONSTRAINT id_product3 FOREIGN KEY (product) REFERENCES telcodb.product (name),
+        CONSTRAINT id_schedule FOREIGN KEY (activationSchedule) REFERENCES telcodb.serviceActivationSchedule (id)
+    );
+    
+drop table if exists telcodb.servicesForActivationSchedule;
+create table  telcodb.servicesForActivationSchedule
+	(
+		service int NOT NULL,
+        activationSchedule int NOT NULL,
+        PRIMARY KEY (service, activationSchedule),
+        CONSTRAINT id_service FOREIGN KEY (service) REFERENCES telcodb.service (id),
+        CONSTRAINT id_schedule2 FOREIGN KEY (activationSchedule) REFERENCES telcodb.serviceActivationSchedule (id)
+    );*/
+    
+/*drop table if exists telcodb.auditingTable;
+create table  telcodb.auditingTable
+	(
+		id int NOT NULL auto_increment,
+        username varchar(50) NOT NULL,
+        email varchar(50) NOT NULL,
+        amount int NOT NULL,
+        rejectionDateTime datetime NOT NULL,
+        PRIMARY KEY(id)
+    );*/
+#select * from auditingTable
+    
+/*drop table if exists telcodb.employee;
+create table employee
+	( 
+		username varchar(50),
+        password varchar(50) NOT NULL,
+        PRIMARY KEY (username)
+	);*/

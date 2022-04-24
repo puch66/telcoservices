@@ -47,6 +47,19 @@
 		    </div>
 		</nav>
 		
+		<div th:unless="${#lists.isEmpty(rejectedOrders)}" align="left">
+			<p>You have some rejected orders!</p>
+			<ul>
+				<li th:each="r : ${rejectedOrders}">
+					Order #<span th:text="${r.id}"></span> created on <span th:text="${#dates.format(r.creationDate, 'dd-MM-yyyy HH:mm')}"></span> with a cost of <span th:text="${r.totalValue}"></span> euros
+					<form method="GET" action="/TelcoServiceWeb/confirm" id="form">
+						<input type="text" name="id" th:value="${r.id}" hidden="true">
+						<input type="submit" value="Retry Payment">
+					</form>
+				</li>
+			</ul>
+		</div>
+		
 		<div align="left">
 			<p>Here there will be shown all the service packages</p>
 			<ul th:unless="${#lists.isEmpty(packages)}">

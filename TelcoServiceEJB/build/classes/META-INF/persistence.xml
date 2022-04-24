@@ -15,6 +15,9 @@
 		<class>it.polimi.db2.telco.entities.ServicePackage</class>
 		<class>it.polimi.db2.telco.entities.ValidityPeriod</class>
 		<class>it.polimi.db2.telco.entities.CustomOrder</class>
+		<class>it.polimi.db2.telco.entities.AuditingTable</class>
+		<class>it.polimi.db2.telco.entities.ServiceActivationSchedule</class>
+		<class>it.polimi.db2.telco.entities.Employee</class>
 		<properties>
 			<property name="eclipselink.logging.level" value="FINE" />
 		</properties>

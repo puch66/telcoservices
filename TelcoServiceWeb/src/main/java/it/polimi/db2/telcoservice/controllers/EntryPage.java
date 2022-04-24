@@ -17,7 +17,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 /**
  * Servlet implementation class EntryPage
  */
-@WebServlet("/")
+@WebServlet(urlPatterns={"/index", "/welcome.html"})
 public class EntryPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;

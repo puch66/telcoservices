@@ -74,8 +74,8 @@ public class Login extends HttpServlet {
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			ctx.setVariable("errorMsg", "Incorrect username or password");
-			path = "/index.html";
-			templateEngine.process(path, ctx, response.getWriter());
+			path = getServletContext().getContextPath() + "/index";
+			response.sendRedirect(path);
 		} else {
 			request.getSession().setAttribute("user", customer);
 			if(request.getParameter("redirect") != null) path = getServletContext().getContextPath() + "/confirm";

@@ -63,15 +63,15 @@
 		</ul>
 		
 		<form th:unless="${session.user} == null" method="POST" action="/TelcoServiceWeb/createOrder">
-			<input type="text" name="isValid" value="1" hidden="true">
+			<input type="text" name="isValid" value="0" hidden="true">
 			<input type="submit" value="BUY-SUCCESS">
 		</form>
 		
 		<form th:unless="${session.user} == null" method="POST" action="/TelcoServiceWeb/createOrder">
-			<input type="text" name="isValid" value="0" hidden="true">
+			<input type="text" name="isValid" value="1" hidden="true">
 			<input type="submit" value="BUY-FAIL">
 		</form>
 		
-		<a th:if="${session.user} == null" href="/TelcoServiceWeb/?redirect=true">Login or register in order to proceed with the order</a>
+		<a th:if="${session.user} == null" href="/TelcoServiceWeb/index?redirect=true">Login or register in order to proceed with the order</a>
 	</body>
 </html>

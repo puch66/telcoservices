@@ -3,7 +3,6 @@ package it.polimi.db2.telco.services;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -61,6 +60,25 @@ public class CustomOrderService {
     	Product pr = em.find(Product.class,p);
     	CustomOrder co = em.find(CustomOrder.class, c);
     	co.addProduct(pr);
+    }
+    
+    public List<CustomOrder> findRejectedOrders(Customer c) {
+    	List<CustomOrder> rejectedOrders = em.createNamedQuery("CustomOrder.findRejectedOrders", CustomOrder.class).setParameter(1, c).getResultList();
+    	return rejectedOrders;
+    }
+    
+    public CustomOrder findOrder(int id) {
+    	return em.find(CustomOrder.class, id);
+    }
+    
+    public void validateOrder(int id) {
+    	CustomOrder order = em.find(CustomOrder.class, id);
+    	order.setIsValid(0);
+    }
+    
+    public void invalidateOrder(int id) {
+    	CustomOrder order = em.find(CustomOrder.class, id);
+    	order.setIsValid(order.getIsValid()+1);
     }
 
 }

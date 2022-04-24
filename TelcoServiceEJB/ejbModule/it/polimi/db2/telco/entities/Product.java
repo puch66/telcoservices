@@ -24,6 +24,10 @@ public class Product implements Serializable {
 	@ManyToMany(mappedBy="products")
 	private List<ServicePackage> servicePackages;
 
+	//bi-directional many-to-many association to ServiceActivationSchedule
+	@ManyToMany(mappedBy="products")
+	private List<ServiceActivationSchedule> serviceActivationSchedules;
+
 	//bi-directional many-to-many association to CustomOrder
 	@ManyToMany
 	@JoinTable(
@@ -62,6 +66,14 @@ public class Product implements Serializable {
 
 	public void setServicePackages(List<ServicePackage> servicePackages) {
 		this.servicePackages = servicePackages;
+	}
+
+	public List<ServiceActivationSchedule> getServiceActivationSchedules() {
+		return this.serviceActivationSchedules;
+	}
+
+	public void setServiceActivationSchedules(List<ServiceActivationSchedule> serviceActivationSchedules) {
+		this.serviceActivationSchedules = serviceActivationSchedules;
 	}
 
 	public List<CustomOrder> getCustomOrders() {

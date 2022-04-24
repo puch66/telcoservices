@@ -28,6 +28,10 @@ public class Customer implements Serializable {
 	@OneToMany(mappedBy="customer")
 	private List<CustomOrder> customOrders;
 
+	//bi-directional many-to-one association to ServiceActivationSchedule
+	@OneToMany(mappedBy="customer")
+	private List<ServiceActivationSchedule> serviceActivationSchedules;
+
 	public Customer() {
 	}
 
@@ -83,6 +87,28 @@ public class Customer implements Serializable {
 		customOrder.setCustomer(null);
 
 		return customOrder;
+	}
+
+	public List<ServiceActivationSchedule> getServiceActivationSchedules() {
+		return this.serviceActivationSchedules;
+	}
+
+	public void setServiceActivationSchedules(List<ServiceActivationSchedule> serviceActivationSchedules) {
+		this.serviceActivationSchedules = serviceActivationSchedules;
+	}
+
+	public ServiceActivationSchedule addServiceActivationSchedule(ServiceActivationSchedule serviceActivationSchedule) {
+		getServiceActivationSchedules().add(serviceActivationSchedule);
+		serviceActivationSchedule.setCustomer(this);
+
+		return serviceActivationSchedule;
+	}
+
+	public ServiceActivationSchedule removeServiceActivationSchedule(ServiceActivationSchedule serviceActivationSchedule) {
+		getServiceActivationSchedules().remove(serviceActivationSchedule);
+		serviceActivationSchedule.setCustomer(null);
+
+		return serviceActivationSchedule;
 	}
 
 }

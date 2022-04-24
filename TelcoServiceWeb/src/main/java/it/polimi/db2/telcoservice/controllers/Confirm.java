@@ -108,8 +108,12 @@ public class Confirm extends HttpServlet {
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String orderId = StringEscapeUtils.escapeJava(request.getParameter("id"));
 		CustomOrder order = (CustomOrder) request.getSession().getAttribute("order");
-		order.setCustomer((Customer) request.getSession().getAttribute("user"));
+		if(orderId != null) {
+			order = customOrderService.findOrder(Integer.parseInt(orderId));
+		}
+		else order.setCustomer((Customer) request.getSession().getAttribute("user"));
 		request.getSession().setAttribute("order", order);
 		
 		String path = "/WEB-INF/confirmation_page.html";

@@ -16,7 +16,10 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import it.polimi.db2.telco.entities.CustomOrder;
+import it.polimi.db2.telco.entities.Customer;
 import it.polimi.db2.telco.entities.ServicePackage;
+import it.polimi.db2.telco.services.CustomOrderService;
 import it.polimi.db2.telco.services.ServicePackageService;
 
 
@@ -26,6 +29,8 @@ public class Homepage extends HttpServlet {
 	private TemplateEngine templateEngine;
 	@EJB(name = "it.polimi.db2.telco.services/ServicePackageService")
 	private ServicePackageService spService;
+	@EJB(name = "it.polimi.db2.telco.services/CustomOrderService")
+	private CustomOrderService coService;
 	
     public Homepage() {
         super();
@@ -41,11 +46,18 @@ public class Homepage extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Customer c = (Customer) request.getSession().getAttribute("user");
+		List<CustomOrder> rejectedOrders = null;
+		if(c != null) {
+			rejectedOrders = coService.findRejectedOrders(c);
+		}
+		
 		List<ServicePackage> packages = spService.findAllPackages();
 		String path = "/WEB-INF/home.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		ctx.setVariable("packages", packages);
+		ctx.setVariable("rejectedOrders", rejectedOrders);
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 

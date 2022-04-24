@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="customOrder")
-@NamedQuery(name="Customer.findRejectedOrders", query="SELECT o FROM CustomOrder o where o.customer = ?1")
+@NamedQuery(name="CustomOrder.findRejectedOrders", query="SELECT o FROM CustomOrder o WHERE o.customer = ?1 AND o.isValid <> 0")
 public class CustomOrder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -23,12 +23,12 @@ public class CustomOrder implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 
+	private int isValid;
+
 	@Temporal(TemporalType.DATE)
 	private Date startDate;
 
 	private int totalValue;
-	
-	private int isValid;
 
 	//bi-directional many-to-one association to Customer
 	@ManyToOne
@@ -66,6 +66,14 @@ public class CustomOrder implements Serializable {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public int getIsValid() {
+		return this.isValid;
+	}
+
+	public void setIsValid(int isValid) {
+		this.isValid = isValid;
 	}
 
 	public Date getStartDate() {
@@ -119,14 +127,6 @@ public class CustomOrder implements Serializable {
 	public void addProduct(Product p) {
 		this.getProducts().add(p);
 		p.getCustomOrders().add(this);
-	}
-
-	public int getIsValid() {
-		return isValid;
-	}
-
-	public void setIsValid(int isValid) {
-		this.isValid = isValid;
 	}
 
 }

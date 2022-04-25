@@ -107,5 +107,15 @@ public class ServiceActivationSchedule implements Serializable {
 	public void setServices(List<Service> services) {
 		this.services = services;
 	}
+	
+	public void addProduct(Product p) {
+		this.getProducts().add(p);
+		p.getServiceActivationSchedules().add(this);
+	}
+	
+	public void addService(Service s) {
+		this.getServices().add(s);
+		s.getServiceActivationSchedules().add(this);
+	}
 
 }

@@ -10,27 +10,16 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="fixedinternetservice")
+@DiscriminatorValue("Fixedinternetservice")
 @NamedQuery(name="Fixedinternetservice.findAll", query="SELECT f FROM Fixedinternetservice f")
-public class Fixedinternetservice implements Serializable {
+public class Fixedinternetservice extends Service implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@Column(name="id_fixed_internet")
-	private int idFixedInternet;
 
 	private int fee_extra_GB;
 
 	private int num_GB;
 
 	public Fixedinternetservice() {
-	}
-
-	public int getIdFixedInternet() {
-		return this.idFixedInternet;
-	}
-
-	public void setIdFixedInternet(int idFixedInternet) {
-		this.idFixedInternet = idFixedInternet;
 	}
 
 	public int getFee_extra_GB() {

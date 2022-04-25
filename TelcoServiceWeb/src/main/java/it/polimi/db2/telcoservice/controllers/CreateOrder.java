@@ -20,6 +20,7 @@ import it.polimi.db2.telco.entities.Customer;
 import it.polimi.db2.telco.services.AuditingTableService;
 import it.polimi.db2.telco.services.CustomOrderService;
 import it.polimi.db2.telco.services.CustomerService;
+import it.polimi.db2.telco.services.ServiceActivationScheduleService;
 
 /**
  * Servlet implementation class CreateOrder
@@ -34,11 +35,14 @@ public class CreateOrder extends HttpServlet {
 	private CustomerService customerService;
 	@EJB(name = "it.polimi.db2.telco.services/AuditingTableService")
 	private AuditingTableService atService;
+	@EJB(name = "it.polimi.db2.telco.services/ServiceActivationScheduleService")
+	private ServiceActivationScheduleService sasService;
 	
     public CreateOrder() {
         super();
     }
     
+    /*inutile, eliminalo*/
     public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
@@ -60,7 +64,7 @@ public class CreateOrder extends HttpServlet {
 			//if payment fails, add insolvence to the user
 			if(!isValid.equals("0")) customerService.addInsolvence(c.getUsername(), 1);
 			//else create service activation schedule
-			/**********IMPLEMENT ME************/
+			else sasService.createActivationSchedule(order);
 		}
 		//otherwise update order
 		else {
@@ -69,7 +73,7 @@ public class CreateOrder extends HttpServlet {
 				customerService.addInsolvence(c.getUsername(), -order.getIsValid());
 				customOrderService.validateOrder(order.getId());
 				//create service activation schedule
-				/**********IMPLEMENT ME************/
+				sasService.createActivationSchedule(order);
 			}
 			//otherwise increase insolvence
 			else {

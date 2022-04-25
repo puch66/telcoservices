@@ -49,43 +49,21 @@ create table telcodb.service
 	(
 		id int NOT NULL auto_increment,
         serPackage int,
+        service_type varchar(50) NOT NULL,
+        num_minutes int,
+        num_SMS int,
+        fee_extra_min int,
+        fee_extra_SMS int,
+        num_GB int,
+        fee_extra_GB int,
         PRIMARY KEY (id),
         CONSTRAINT id_package2 FOREIGN KEY (serPackage) REFERENCES telcodb.servicePackage (id) ON DELETE CASCADE ON UPDATE CASCADE 
     );
 
-insert into telcodb.service values (1,1), (2,2), (3,2), (4,3), (5,4), (6,4), (7,4);
-
-drop table if exists telcodb.mobilephoneservice;
-create table telcodb.mobilephoneservice
-	(
-		id_mobile_phone int PRIMARY KEY REFERENCES telcodb.service (id),
-        num_minutes int,
-        num_SMS int,
-        fee_extra_min int,
-        fee_extra_SMS int
-    );
-
-drop table if exists telcodb.fixedphoneservice;
-create table telcodb.fixedphoneservice
-	(
-		id_fixed_phone int PRIMARY KEY REFERENCES telcodb.service (id)
-    );
-
-drop table if exists telcodb.mobileinternetservice;
-create table telcodb.mobileinternetservice
-	(
-		id_mobile_internet int PRIMARY KEY REFERENCES telcodb.service (id),
-        num_GB int,
-        fee_extra_GB int
-    );
-
-drop table if exists telcodb.fixedinternetservice;
-create table telcodb.fixedinternetservice
-	(
-		id_fixed_internet int PRIMARY KEY REFERENCES telcodb.service (id),
-        num_GB int,
-        fee_extra_GB int
-    );*/
+insert into telcodb.service values (1,1,'Mobilephoneservice',600,1000,10,10,null,null), (2,2,'Mobilephoneservice',1200,100,20,5,null,null),
+								   (3,2,'Fixedphoneservice',null,null,null,null,null,null), (4,3,'Fixedinternetservice',null,null,null,null,50,20), 
+                                   (5,4,'Mobilephoneservice',2000,2000,30,30,null,null), (6,4,'Fixedinternetservice',null,null,null,null,100,30),
+                                   (7,4,'Mobileinternetservice',null,null,null,null,80,25);*/
 
 /*drop table if exists telcodb.product;
 create table telcodb.product
@@ -161,9 +139,9 @@ create table  telcodb.productsForActivationSchedule
         PRIMARY KEY (product, activationSchedule),
         CONSTRAINT id_product3 FOREIGN KEY (product) REFERENCES telcodb.product (name),
         CONSTRAINT id_schedule FOREIGN KEY (activationSchedule) REFERENCES telcodb.serviceActivationSchedule (id)
-    );
+    );*/
     
-drop table if exists telcodb.servicesForActivationSchedule;
+/*drop table if exists telcodb.servicesForActivationSchedule;
 create table  telcodb.servicesForActivationSchedule
 	(
 		service int NOT NULL,
@@ -172,6 +150,10 @@ create table  telcodb.servicesForActivationSchedule
         CONSTRAINT id_service FOREIGN KEY (service) REFERENCES telcodb.service (id),
         CONSTRAINT id_schedule2 FOREIGN KEY (activationSchedule) REFERENCES telcodb.serviceActivationSchedule (id)
     );*/
+    
+#select * from serviceActivationSchedule;
+#select * from servicesForActivationSchedule;
+#select * from productsForActivationSchedule;
     
 /*drop table if exists telcodb.auditingTable;
 create table  telcodb.auditingTable
@@ -192,3 +174,5 @@ create table employee
         password varchar(50) NOT NULL,
         PRIMARY KEY (username)
 	);*/
+    
+#insert into employee values ('admin','admin');

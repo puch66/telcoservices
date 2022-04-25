@@ -56,7 +56,7 @@ public class CustomOrderService {
     	}
     }
     
-    public void addToOrderedProduct(String p, int c) {
+    private void addToOrderedProduct(String p, int c) {
     	Product pr = em.find(Product.class,p);
     	CustomOrder co = em.find(CustomOrder.class, c);
     	co.addProduct(pr);

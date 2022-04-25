@@ -10,23 +10,12 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="fixedphoneservice")
+@DiscriminatorValue("Fixedphoneservice")
 @NamedQuery(name="Fixedphoneservice.findAll", query="SELECT f FROM Fixedphoneservice f")
-public class Fixedphoneservice implements Serializable {
+public class Fixedphoneservice extends Service implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="id_fixed_phone")
-	private int idFixedPhone;
-
 	public Fixedphoneservice() {
-	}
-
-	public int getIdFixedPhone() {
-		return this.idFixedPhone;
-	}
-
-	public void setIdFixedPhone(int idFixedPhone) {
-		this.idFixedPhone = idFixedPhone;
 	}
 
 }

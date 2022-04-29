@@ -14,35 +14,61 @@
 		<!-- Personal CSS -->
     	<link rel=stylesheet href="static/styles/general.css" type="text/css">		
     	
+    	<!-- Personal Font -->
+    	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Optima:bold,serif">
+    	
+    	
 	</head>
 	<body>
-		<span>Are you an employee? <a href="/TelcoServiceWeb/employee/index">Login as employee</a></span>
+		<div class="row">
+			<div class="col col-6">
+				<img src="static/images/logo.jpg" class="loginlogo" alt="TELCO">	
+			</div>
+			<div class="col col-6">
+				<div class="employeelinkbox">
+					<a href="/TelcoServiceWeb/employee/index" class="telcotext telcomedium">
+						Login as employee
+						<img src="static/images/employeelogin.jpeg" alt="EMPLOYEE" class="employeelinklogo">
+					</a>
+				</div>
+			</div>
+		</div>
+		<br><br><br><br><br>
 		
 		<div th:if="${session.user} == null" class="row">
 			<div class="col col-6">
-				<h3 class="telcotext">Login</h3>
-				<form method="POST" action="/TelcoServiceWeb/login">
-					<input th:unless="${redirect} == null" type="text" hidden="true" name="redirect" value="true">
-					<h3 class="telcotext">Username</h3>
-					<input type="text" name="username" id="username" class="telcotext" placeholder="Test">
-					<h3 class="telcotext">Password</h3>
-					<input type="password" name="password" id="password" class="telcotext" placeholder="Test123">
-					<input type="submit" class="btn btn-success telcotext" value="Login">
-				</form>
-				<a href="/TelcoServiceWeb/home">Enter as guest</a>
+				<div class="telcocol6">
+					<h3 class="telcotitle">Login</h3>
+					<form method="POST" action="/TelcoServiceWeb/login">
+						<input th:unless="${redirect} == null" type="text" hidden="true" name="redirect" value="true">
+						<h3 class="telcotext telcomedium">Username</h3>
+						<input type="text" name="username" id="username" class="telcoinputtext" required>
+						<h3 class="telcotext telcomedium">Password</h3>
+						<input type="password" name="password" id="password" class="telcoinputtext" required>
+						<h3 th:unless="${errorMsg} == null" th:text="${errorMsg}" class="telcoerrortext telcomedium"></h3>
+						<input type="submit" class="btn btn-warning telcobtn" value="Login">
+					</form>
+					<br><br>
+					<a href="/TelcoServiceWeb/home" class="telcotext">Enter as guest</a>
+					<br><br><br>
+				</div>
 			</div>
 			<div class="col col-6">
-				<h3 class="telcotext">Sign Up</h3>
-				<form method="POST" action="/TelcoServiceWeb/register">
-					<input th:if="${redirect=='true'}" type="text" name="redirect" value="true" hidden="true">
-					<h3 class="telcotext">Email</h3>
-					<input type="text" name="email" id="email" class="telcotext" placeholder="Test123@telco.com">
-					<h3 class="telcotext">Username</h3>
-					<input type="text" name="username" id="username" class="telcotext" placeholder="Test">
-					<h3 class="telcotext">Password</h3>
-					<input type="password" name="password" id="password" class="telcotext" placeholder="Test123">
-					<input type="submit" class="btn btn-success telcotext" value="Register">
-				</form>
+				<div class="telcocol6">
+					<h3 class="telcotitle">Sign Up</h3>
+					<form method="POST" action="/TelcoServiceWeb/register">
+						<input th:if="${redirect=='true'}" type="text" name="redirect" value="true" hidden="true">
+						<h3 class="telcotext telcomedium">Email</h3>
+						<input type="text" name="email" id="email" class="telcoinputtext" required>
+						<h3 class="telcotext telcomedium">Username</h3>
+						<input type="text" name="username" id="username" class="telcoinputtext" required>
+						<h3 class="telcotext telcomedium">Password</h3>
+						<input type="password" name="password" id="password" class="telcoinputtext" required>
+						<h3 class="telcotext telcomedium"></h3>
+						<input type="submit" class="btn btn-warning telcobtn" value="Register">
+					</form>
+					<br><br><br><br><br>
+				</div>
 			</div>
 		</div>
 		

@@ -1,9 +1,37 @@
 .telcotext{
-	
+	font-family: 'Optima', serif;
+	color: #ccac00;
+}
+
+.telcoinputtext{
+	font-family: 'Optima', serif;
+	color: black;
+}
+
+.telcoerrortext{
+		font-family: 'Optima', serif;
+	color: red;
+}
+
+.telcotitle{
+	font-family: 'Optima', serif;
+	color: #f6d32d;
+	font-weight: bold;
+	margin-bottom: 25px;
+}
+
+.telcobtn{
+	font-family: 'Optima', serif;
+	color: black;
+	background-color: #ccac00;
+}
+
+.telcomedium{
+	font-size: 20px;
 }
 
 body{
-	background-color:blue;
+	background-color:#000080;
 }
 
 .logo{
@@ -13,4 +41,44 @@ body{
 
 .navsize{
 	font-size:18px;
+}
+
+.employeelinklogo{
+	width: 60px;
+	border-radius: 100px;
+	margin-left: 15px;
+}
+
+.loginlogo{
+	height: 125px;
+	margin-left: 30px;
+	margin-top: 20px;
+}
+
+.employeelinkbox{
+	padding: 15px;
+	margin-left: 50%;
+	margin-top: 20px;
+	margin-right: 50px;
+	border-style: solid;
+	border-color: gold;
+	border-width: 3px;
+	width: 310px;
+	height: 90px;
+}
+
+.telcocol6{
+	padding: 20px;
+	margin-left: 20%;
+	width: 50%;
+	border-style: solid;
+	border-color: gold;
+	border-width: 3px;
+	box-shadow: 10px 10px;
+	border-radius: 10px;
+	background-color: #003399;
+}
+
+input{
+	margin: 10px;
 }

@@ -1,7 +1,5 @@
 package it.polimi.db2.telco.services;
 
-import java.util.List;
-
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,39 +23,34 @@ public class ServiceService {
     public ServiceService() {
     }
     
-    public List<Service> findAvailableServices() {
-    	return em.createNamedQuery("Service.findAvailableServices", Service.class).getResultList();
-    }
-    
-    public void createService() {
+    public Service createService() {
     	Fixedphoneservice s = new Fixedphoneservice();
-    	em.persist(s);
+    	return s;
     }
     
-    public void createService(int numMinutes, int numSMS, int feeExtraMin, int feeExtraSMS) {
+    public Service createService(int numMinutes, int numSMS, int feeExtraMin, int feeExtraSMS) {
     	Mobilephoneservice s = new Mobilephoneservice();
     	s.setNumMinutes(numMinutes);
     	s.setNum_SMS(numSMS);
     	s.setFeeExtraMin(feeExtraMin);
     	s.setFee_extra_SMS(feeExtraSMS);
-    	em.persist(s);
+    	return s;
     }
     
-    public void createService(int numGB, int feeExtraGB, String type) {
+    public Service createService(int numGB, int feeExtraGB, String type) {
     	switch(type) {
     		case "fixedinternet":
     			Fixedinternetservice s = new Fixedinternetservice();
     	    	s.setNum_GB(numGB);
     	    	s.setFee_extra_GB(feeExtraGB);
-    	    	em.persist(s);
-    	    	break;
+    	    	return s;
     		case "mobileinternet":
     			Mobileinternetservice s2 = new Mobileinternetservice();
     	    	s2.setNum_GB(numGB);
     	    	s2.setFee_extra_GB(feeExtraGB);
-    	    	em.persist(s2);
-    	    	break;
+    	    	return s2;
     	}
+    	return null;
     }
 
 }

@@ -53,5 +53,9 @@ public class CustomerService {
 		Customer customer = em.find(Customer.class, user);
 		customer.setIsInsolvent(customer.getIsInsolvent()+ i);
 	}
+	
+	public List<Customer> getInsolventUsers() {
+		return em.createNamedQuery("Customer.findInsolventUsers", Customer.class).getResultList();
+	}
 
 }

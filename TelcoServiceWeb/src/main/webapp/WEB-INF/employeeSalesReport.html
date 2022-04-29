@@ -49,6 +49,56 @@
 		
 		<div align="left">
 		<p>Sales Report Page</p>
+		<ul th:unless="${#lists.isEmpty(tpp)}">
+			<li>Total Purchases Per Package</li>
+			<li th:each="p:${tpp}">
+				<span th:text="${p.package_}"></span> Has been sold <span th:text="${p.total}"></span> times
+			</li>
+		</ul>
+		<ul th:unless="${#lists.isEmpty(tppvp)}">
+		<li>Total Purchases Per Package and Validity Period</li>
+			<li th:each="p:${tppvp}">
+				<span th:text="${p.package_}"></span> with validity <span th:text="${p.validity}"></span> months has been sold <span th:text="${p.total}"></span> times
+			</li>
+		</ul>
+		<ul th:unless="${#lists.isEmpty(sv)}">
+		<li>Sales Values</li>
+			<li th:each="p:${sv}">
+				<span th:text="${p.package_}"></span>
+				Total sale: <span th:text="${p.totalSale}"></span> euros
+				Sale without products: <span th:text="${p.saleWithoutProd}"></span> euros
+			</li>
+		</ul>
+		<ul th:unless="${#lists.isEmpty(ap)}">
+			<li>Average of Products Sold Per Package</li>
+			<li th:each="p:${ap}">
+				For package <span th:text="${p.package_}"></span> products have been sold on average <span th:text="${p.averageProducts}"></span> times
+			</li>
+		</ul>
+		<ul th:unless="${#lists.isEmpty(insolvents)}">
+			<li>Insolvent users</li>
+			<li th:each="i:${insolvents}">
+				<span th:text="${i.username}"></span> with email <span th:text="${i.email}"></span>
+			</li>
+		</ul>
+		<ul th:unless="${#lists.isEmpty(rejectedOrders)}">
+			<li>Suspended orders</li>
+			<li th:each="r:${rejectedOrders}">
+				Order #<span th:text="${r.id}"></span> created on <span th:text="${#dates.format(r.creationDate, 'dd-MM-yyyy HH:mm')}"></span> with a cost of <span th:text="${r.totalValue}"></span> euros by <span th:text="${r.customer.username}"></span>
+			</li>
+		</ul>
+		<ul th:unless="${#lists.isEmpty(alerts)}">
+			<li>Alerts</li>
+			<li th:each="a:${alerts}">
+				<span th:text="${a.email}"></span> - amount of <span th:text="${a.amount}"></span> euros on <span th:text="${a.rejectionDateTime}"></span>
+			</li>
+		</ul>
+		<ul th:unless="${#lists.isEmpty(bp)}">
+			<li>Best Seller Product</li>
+			<li th:each="p:${bp}">
+				<span th:text="${p.product}"></span> with a total sale of <span th:text="${p.totalSales}"></span> euros
+			</li>
+		</ul>
 		</div>
 	</body>
 </html>

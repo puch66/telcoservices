@@ -52,13 +52,30 @@ public class CreateServicePackage extends HttpServlet {
 			}
 		}
 		
-		List<Service> services = sService.findAvailableServices();
 		List<Service> servicesSelected = new ArrayList<Service>();
-		for(Service s: services) {
-			reqproduct = StringEscapeUtils.escapeJava(request.getParameter(Integer.toString(s.getId())));
-			if(reqproduct != null) {
-				servicesSelected.add(s);
-			}
+		String mpcheck = StringEscapeUtils.escapeJava(request.getParameter("mpcheck"));
+		if(mpcheck != null) {
+			int numMinutes = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("numMinutes")));
+			int numSMS = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("numSMS")));
+			int feeMinutes = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("feeMinutes")));
+			int feeSMS = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("feeSMS")));
+			servicesSelected.add(sService.createService(numMinutes, numSMS, feeMinutes, feeSMS));
+		}
+		String fpcheck = StringEscapeUtils.escapeJava(request.getParameter("fpcheck"));
+		if(fpcheck != null) {		
+			servicesSelected.add(sService.createService());
+		}
+		String micheck = StringEscapeUtils.escapeJava(request.getParameter("micheck"));
+		if(micheck != null) {		
+			int numGB = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("numGB")));
+			int feeGB = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("feeGB")));
+			servicesSelected.add(sService.createService(numGB, feeGB, "mobileinternet"));
+		}
+		String ficheck = StringEscapeUtils.escapeJava(request.getParameter("ficheck"));
+		if(ficheck != null) {
+			int numGB = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("numGBfi")));
+			int feeGB = Integer.parseInt(StringEscapeUtils.escapeJava(request.getParameter("feeGBfi")));
+			servicesSelected.add(sService.createService(numGB, feeGB, "fixedinternet"));
 		}
 		
 		spService.createServicePackage(name,vp12,vp24,vp36,productsSelected,servicesSelected);

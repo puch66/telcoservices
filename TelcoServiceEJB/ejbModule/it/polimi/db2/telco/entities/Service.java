@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name="service")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="service_type", discriminatorType = DiscriminatorType.STRING)
-@NamedQuery(name="Service.findAvailableServices", query="SELECT s FROM Service s WHERE s.servicePackage is null")
 public class Service implements Serializable {
 	private static final long serialVersionUID = 1L;
 

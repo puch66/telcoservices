@@ -56,7 +56,6 @@ public class ServicePackageService {
     	
     	sp.setServices(new ArrayList<Service>());
     	for(Service s: servicesSelected) {
-    		s = em.find(Service.class, s.getId());
     		sp.addService(s);
     	}
     	

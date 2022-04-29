@@ -51,6 +51,7 @@ public class CustomOrderService {
     	em.persist(order);
     	em.flush(); //do I need this?
     	List<Product> productsToAdd = new ArrayList<>(order.getProducts());
+    	order.setProducts(new ArrayList<>());
     	for(Product p:productsToAdd) {
     		this.addToOrderedProduct(p.getName(), order.getId());
     	}
@@ -64,6 +65,11 @@ public class CustomOrderService {
     
     public List<CustomOrder> findRejectedOrders(Customer c) {
     	List<CustomOrder> rejectedOrders = em.createNamedQuery("CustomOrder.findRejectedOrders", CustomOrder.class).setParameter(1, c).getResultList();
+    	return rejectedOrders;
+    }
+    
+    public List<CustomOrder> findAllRejectedOrders() {
+    	List<CustomOrder> rejectedOrders = em.createNamedQuery("CustomOrder.findAllRejectedOrders", CustomOrder.class).getResultList();
     	return rejectedOrders;
     }
     

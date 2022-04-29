@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name="customOrder")
 @NamedQuery(name="CustomOrder.findRejectedOrders", query="SELECT o FROM CustomOrder o WHERE o.customer = ?1 AND o.isValid <> 0")
+@NamedQuery(name="CustomOrder.findAllRejectedOrders", query="SELECT o FROM CustomOrder o WHERE o.isValid <> 0")
 public class CustomOrder implements Serializable {
 	private static final long serialVersionUID = 1L;
 

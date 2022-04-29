@@ -41,11 +41,11 @@ public class ServicePackage implements Serializable {
 	private List<Product> products;
 
 	//bi-directional many-to-one association to Service
-	@OneToMany(mappedBy="servicePackage")
+	@OneToMany(mappedBy="servicePackage", cascade = CascadeType.ALL)
 	private List<Service> services;
 
 	//bi-directional many-to-one association to ValidityPeriod
-	@OneToMany(mappedBy="servicePackageBean", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy="servicePackageBean", cascade = CascadeType.ALL)
 	private List<ValidityPeriod> validityPeriods;
 
 	public ServicePackage() {

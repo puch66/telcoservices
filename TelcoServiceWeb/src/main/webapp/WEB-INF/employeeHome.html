@@ -54,13 +54,32 @@
 				<h3>Give a name to the package:</h3>
 				<input type="text" name="name">
 				<h3>Select services to add</h3>
-				<div class="form-check">
-				  <div th:each="s : ${services}">
-				  	<!-- AGGIUNGERE CAMPO NAME (UNIQUE NOT NULL) AI SERVICE SENNÒ NON SE CAPISCE UN CAZZO -->
-				  	<input class="form-check-input" type="checkbox" th:name="${s.id}" th:id="${s.id}">
-				  	<label class="form-check-label" th:for="${s.id}" th:text="${s.id}"></label>
-				  </div> 
-				</div>
+				<!-- AGGIUNGERE CAMPO NAME (UNIQUE NOT NULL) AI SERVICE SENNÒ NON SE CAPISCE UN CAZZO -->
+				
+				<h3>Add mobile phone service:</h3>
+				<span>Number of minutes:</span><input type="number" name="numMinutes">
+				<span>Number of SMS:</span><input type="number" name="numSMS">
+				<span>Fee extra minutes:</span><input type="number" name="feeMinutes">
+				<span>Fee extra SMS:</span><input type="number" name="feeSMS">
+				<input class="form-check-input" type="checkbox" th:name="mpcheck" th:id="mpcheck">
+				<label class="form-check-label" for="add mp service" text="add mp service"></label>
+				
+				<h3>Add fixed phone service:</h3>
+				<input class="form-check-input" type="checkbox" th:name="fpcheck" th:id="fpcheck">
+				<label class="form-check-label" for="add fp service" text="add fp service">Add fp service</label>
+
+				<h3>Add mobile internet service:</h3>
+				<span>Number of GB:</span><input type="number" name="numGB">
+				<span>Fee extra GB:</span><input type="number" name="feeGB">
+				<input class="form-check-input" type="checkbox" th:name="micheck" th:id="micheck">
+				<label class="form-check-label" for="addmiservice" text="addmiservice"></label>
+
+				<h3>Add fixed internet service:</h3>
+				<span>Number of GB:</span><input type="number" name="numGBfi">
+				<span>Fee extra GB:</span><input type="number" name="feeGBfi">
+				<input class="form-check-input" type="checkbox" th:name="ficheck" th:id="ficheck">
+				<label class="form-check-label" for="addfiservice" text="add fi service"></label>
+
 				<h3>Add validity periods:</h3>
 				<span>Fee for 12 months:</span><input type="number" name="vp12">
 				<span>Fee for 24 months:</span><input type="number" name="vp24">
@@ -76,36 +95,6 @@
 			</form>
 			
 			<br><br><br><br><br>
-			
-			<p>Create a new service</p>
-			<form method="POST" action="/TelcoServiceWeb/createService">
-				<input type="text" name="type" value="mobilephone" hidden="true">
-				<h3>Add mobile phone service:</h3>
-				<span>Number of minutes:</span><input type="number" name="numMinutes">
-				<span>Number of SMS:</span><input type="number" name="numSMS">
-				<span>Fee extra minutes:</span><input type="number" name="feeMinutes">
-				<span>Fee extra SMS:</span><input type="number" name="feeSMS">
-				<input type="submit" value="Create Service">
-			</form>
-			<form method="POST" action="/TelcoServiceWeb/createService">
-				<input type="text" name="type" value="fixedphone" hidden="true">
-				<h3>Add fixed phone service:</h3>
-				<input type="submit" value="Create Serivce">
-			</form>
-			<form method="POST" action="/TelcoServiceWeb/createService">
-				<input type="text" name="type" value="mobileinternet" hidden="true">
-				<h3>Add mobile internet service:</h3>
-				<span>Number of GB:</span><input type="number" name="numGB">
-				<span>Fee extra GB:</span><input type="number" name="feeGB">
-				<input type="submit" value="Create Serivce">
-			</form>
-			<form method="POST" action="/TelcoServiceWeb/createService">
-				<input type="text" name="type" value="fixedinternet" hidden="true">
-				<h3>Add fixed internet service:</h3>
-				<span>Number of GB:</span><input type="number" name="numGB">
-				<span>Fee extra GB:</span><input type="number" name="feeGB">
-				<input type="submit" value="Create Serivce">
-			</form>
 			
 			<p>Create a new optional product</p>
 			<form method="POST" action="/TelcoServiceWeb/createProduct">

@@ -18,6 +18,11 @@
 		<class>it.polimi.db2.telco.entities.AuditingTable</class>
 		<class>it.polimi.db2.telco.entities.ServiceActivationSchedule</class>
 		<class>it.polimi.db2.telco.entities.Employee</class>
+		<class>it.polimi.db2.telco.entities.AverageProductsSoldForPackage</class>
+		<class>it.polimi.db2.telco.entities.BestSellerProduct</class>
+		<class>it.polimi.db2.telco.entities.SalesValue</class>
+		<class>it.polimi.db2.telco.entities.TotalPurchasesPerPackage</class>
+		<class>it.polimi.db2.telco.entities.TotalPurchasesPerPackageAndValidityPeriod</class>
 		<properties>
 			<property name="eclipselink.logging.level" value="FINE" />
 		</properties>

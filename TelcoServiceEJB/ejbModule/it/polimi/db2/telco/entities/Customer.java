@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name="customer")
 @NamedQuery(name="Customer.checkCredentials", query="SELECT c FROM Customer c  WHERE c.username = ?1 and c.password = ?2")
+@NamedQuery(name="Customer.findInsolventUsers", query="SELECT c FROM Customer c WHERE c.isInsolvent > 0")
 public class Customer implements Serializable {
 	private static final long serialVersionUID = 1L;
 

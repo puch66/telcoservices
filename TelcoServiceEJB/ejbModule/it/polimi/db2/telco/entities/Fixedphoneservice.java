@@ -9,7 +9,6 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="fixedphoneservice")
 @DiscriminatorValue("Fixedphoneservice")
 @NamedQuery(name="Fixedphoneservice.findAll", query="SELECT f FROM Fixedphoneservice f")
 public class Fixedphoneservice extends Service implements Serializable {

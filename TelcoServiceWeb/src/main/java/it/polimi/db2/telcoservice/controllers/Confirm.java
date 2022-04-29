@@ -110,16 +110,23 @@ public class Confirm extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String orderId = StringEscapeUtils.escapeJava(request.getParameter("id"));
 		CustomOrder order = (CustomOrder) request.getSession().getAttribute("order");
-		if(orderId != null) {
-			order = customOrderService.findOrder(Integer.parseInt(orderId));
-		}
-		else order.setCustomer((Customer) request.getSession().getAttribute("user"));
-		request.getSession().setAttribute("order", order);
-		
-		String path = "/WEB-INF/confirmation_page.html";
+		String path;
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		templateEngine.process(path, ctx, response.getWriter());
+		if(order == null && orderId == null) {
+			path = getServletContext().getContextPath() + "/home";
+			ctx.setVariable("cannotConfirm", "Not allowed to enter confirmation page");
+			response.sendRedirect(path);
+		}
+		else {
+			if(orderId != null) {
+				order = customOrderService.findOrder(Integer.parseInt(orderId));
+			}
+			else order.setCustomer((Customer) request.getSession().getAttribute("user"));
+			request.getSession().setAttribute("order", order);
+			
+			path = "/WEB-INF/confirmation_page.html";
+			templateEngine.process(path, ctx, response.getWriter());
+		}
 	}
-
 }

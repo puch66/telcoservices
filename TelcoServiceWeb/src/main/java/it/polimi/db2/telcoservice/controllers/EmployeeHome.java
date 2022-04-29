@@ -18,7 +18,6 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.db2.telco.entities.Employee;
 import it.polimi.db2.telco.entities.Product;
-import it.polimi.db2.telco.entities.Service;
 import it.polimi.db2.telco.services.ProductService;
 import it.polimi.db2.telco.services.ServiceService;
 
@@ -59,9 +58,7 @@ public class EmployeeHome extends HttpServlet {
 		}
 		else {
 			List<Product> products = prService.findAllProducts();
-			List<Service> services = sService.findAvailableServices();
 			ctx.setVariable("products", products);
-			ctx.setVariable("services", services);
 			templateEngine.process(path, ctx, response.getWriter());
 		}
 	}

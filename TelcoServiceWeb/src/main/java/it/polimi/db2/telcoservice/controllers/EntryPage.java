@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -36,10 +37,14 @@ public class EntryPage extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String errorMsg = StringEscapeUtils.escapeJava(request.getParameter("errorMsg"));
+		String registerMsg = StringEscapeUtils.escapeJava(request.getParameter("registerMsg"));
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		if(request.getParameter("redirect") != null) ctx.setVariable("redirect", "true");
 		String path = "/index.html";
+		ctx.setVariable("registerMsg", registerMsg);
+		ctx.setVariable("errorMsg", errorMsg);
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 

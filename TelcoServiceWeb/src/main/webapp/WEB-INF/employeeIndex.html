@@ -13,22 +13,42 @@
 		
 		<!-- Personal CSS -->
     	<link rel=stylesheet href="../static/styles/general.css" type="text/css">
-    	
+ 
+    	<!-- Personal Font -->
+    	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Optima:bold,serif">
+    	   	
 	</head>
 	<body>
-		<span>Are you a customer? <a href="/TelcoServiceWeb/index">Login as customer</a></span>
+		<div class="row">
+			<div class="col col-6">
+				<img src="../static/images/logo.jpg" class="loginlogo" alt="TELCO">	
+			</div>
+			<div class="col col-6">
+				<div class="employeelinkbox">
+					<a href="/TelcoServiceWeb/" class="telcotext telcomedium">
+						Login as customer
+						<img src="../static/images/customerlogin.png" alt="CUSTOMER" class="employeelinklogo">
+					</a>
+				</div>
+			</div>
+		</div>
+		<br><br><br><br><br>
 		
 		<div th:if="${session.employer} == null" class="row">
-			<div class="col col-6">
-				<h3 class="telcotext">Login</h3>
-				<form method="POST" action="/TelcoServiceWeb/employee/login">
-					<input th:unless="${redirect} == null" type="text" hidden="true" name="redirect" value="true">
-					<h3 class="telcotext">Employer user</h3>
-					<input type="text" name="username" id="username" class="telcotext" placeholder="Test">
-					<h3 class="telcotext">Password</h3>
-					<input type="password" name="password" id="password" class="telcotext" placeholder="Test123">
-					<input type="submit" class="btn btn-success telcotext" value="Login">
-				</form>
+			<div class="col col-12">
+				<div class="telcocol6">
+					<h3 class="telcotitle">Login</h3>
+					<form method="POST" action="/TelcoServiceWeb/employee/login">
+						<h3 class="telcotext telcomedium">Employee user</h3>
+						<input type="text" name="username" id="username" class="telcoinputtext" required>
+						<h3 class="telcotext telcomedium">Password</h3>
+						<input type="password" name="password" id="password" class="telcoinputtext" required>
+						<h3 th:if="${errorMsg} == null" class="telcoerrortext"></h3>
+						<h3 th:unless="${errorMsg} == null" th:text="${errorMsg}" class="telcoerrortext"></h3>
+						<input type="submit" class="btn btn-warning telcobtn" value="Login">
+					</form>
+					<br><br><br>
+				</div>
 			</div>
 		</div>
 		

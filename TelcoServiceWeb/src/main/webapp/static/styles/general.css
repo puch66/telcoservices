@@ -9,8 +9,9 @@
 }
 
 .telcoerrortext{
-		font-family: 'Optima', serif;
+	font-family: 'Optima', serif;
 	color: red;
+	font-size: 16px;
 }
 
 .telcotitle{

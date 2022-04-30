@@ -16,8 +16,7 @@
     	
     	<!-- Personal Font -->
     	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Optima:bold,serif">
-    	
-    	
+    		
 	</head>
 	<body>
 		<div class="row">
@@ -45,7 +44,8 @@
 						<input type="text" name="username" id="username" class="telcoinputtext" required>
 						<h3 class="telcotext telcomedium">Password</h3>
 						<input type="password" name="password" id="password" class="telcoinputtext" required>
-						<h3 th:unless="${errorMsg} == null" th:text="${errorMsg}" class="telcoerrortext telcomedium"></h3>
+						<h3 th:if="${errorMsg} == null" class="telcoerrortext"></h3>
+						<h3 th:unless="${errorMsg} == null" th:text="${errorMsg}" class="telcoerrortext"></h3>
 						<input type="submit" class="btn btn-warning telcobtn" value="Login">
 					</form>
 					<br><br>
@@ -64,7 +64,8 @@
 						<input type="text" name="username" id="username" class="telcoinputtext" required>
 						<h3 class="telcotext telcomedium">Password</h3>
 						<input type="password" name="password" id="password" class="telcoinputtext" required>
-						<h3 class="telcotext telcomedium"></h3>
+						<h3 th:if="${registerMsg} == null" class="telcoerrortext"></h3>
+						<h3 th:unless="${registerMsg} == null" th:text="${registerMsg}" class="telcoerrortext"></h3>
 						<input type="submit" class="btn btn-warning telcobtn" value="Register">
 					</form>
 					<br><br><br><br><br>

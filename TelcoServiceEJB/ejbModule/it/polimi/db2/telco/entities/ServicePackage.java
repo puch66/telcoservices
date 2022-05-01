@@ -21,14 +21,15 @@ public class ServicePackage implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Column(unique = true, nullable = false)
 	private String name;
 
 	//bi-directional many-to-one association to CustomOrder
-	@OneToMany(mappedBy="servicePackageBean")
+	@OneToMany(mappedBy="servicePackageBean", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomOrder> customOrders;
 
 	//bi-directional many-to-many association to Product
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 		name="optProductsForPackage"
 		, joinColumns={
@@ -41,11 +42,11 @@ public class ServicePackage implements Serializable {
 	private List<Product> products;
 
 	//bi-directional many-to-one association to Service
-	@OneToMany(mappedBy="servicePackage", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="servicePackage", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Service> services;
 
 	//bi-directional many-to-one association to ValidityPeriod
-	@OneToMany(mappedBy="servicePackageBean", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="servicePackageBean", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ValidityPeriod> validityPeriods;
 
 	public ServicePackage() {

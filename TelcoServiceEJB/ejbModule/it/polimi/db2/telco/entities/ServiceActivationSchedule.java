@@ -21,9 +21,11 @@ public class ServiceActivationSchedule implements Serializable {
 	private int id;
 
 	@Temporal(TemporalType.DATE)
+	@Column(nullable = false)
 	private Date activationDate;
 
 	@Temporal(TemporalType.DATE)
+	@Column(nullable = false)
 	private Date deactivationDate;
 
 	//bi-directional many-to-many association to Product
@@ -40,7 +42,7 @@ public class ServiceActivationSchedule implements Serializable {
 	private List<Product> products;
 
 	//bi-directional many-to-one association to Customer
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="username")
 	private Customer customer;
 

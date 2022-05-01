@@ -19,8 +19,10 @@ public class ValidityPeriod implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Column(nullable = false)
 	private int duration;
 
+	@Column(nullable = false)
 	private int fee;
 
 	//bi-directional many-to-one association to CustomOrder
@@ -28,7 +30,7 @@ public class ValidityPeriod implements Serializable {
 	private List<CustomOrder> customOrders;
 
 	//bi-directional many-to-one association to ServicePackage
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="servicePackage")
 	private ServicePackage servicePackageBean;
 

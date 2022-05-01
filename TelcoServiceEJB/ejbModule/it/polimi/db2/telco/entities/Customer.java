@@ -19,18 +19,21 @@ public class Customer implements Serializable {
 	@Id
 	private String username;
 
+	@Column(unique = true, nullable = false)
 	private String email;
 
+	@Column(nullable = false)
 	private int isInsolvent;
 
+	@Column(nullable = false)
 	private String password;
 
 	//bi-directional many-to-one association to CustomOrder
-	@OneToMany(mappedBy="customer")
+	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomOrder> customOrders;
 
 	//bi-directional many-to-one association to ServiceActivationSchedule
-	@OneToMany(mappedBy="customer")
+	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ServiceActivationSchedule> serviceActivationSchedules;
 
 	public Customer() {

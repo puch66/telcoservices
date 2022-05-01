@@ -23,32 +23,36 @@ public class CustomOrder implements Serializable {
 	private int id;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
 	private Date creationDate;
 
+	@Column(nullable = false)
 	private int isValid;
 
 	@Temporal(TemporalType.DATE)
+	@Column(nullable = false)
 	private Date startDate;
 
+	@Column(nullable = false)
 	private int totalValue;
 
 	//bi-directional many-to-one association to Customer
 	@ManyToOne
-	@JoinColumn(name="username")
+	@JoinColumn(name="username", nullable = false)
 	private Customer customer;
 
 	//bi-directional many-to-one association to ServicePackage
 	@ManyToOne
-	@JoinColumn(name="servicePackage")
+	@JoinColumn(name="servicePackage", nullable = false)
 	private ServicePackage servicePackageBean;
 
 	//bi-directional many-to-one association to ValidityPeriod
 	@ManyToOne
-	@JoinColumn(name="validity")
+	@JoinColumn(name="validity", nullable = false)
 	private ValidityPeriod validityPeriod;
 
 	//bi-directional many-to-many association to Product
-	@ManyToMany(mappedBy="customOrders")
+	@ManyToMany(mappedBy="customOrders", fetch = FetchType.EAGER)
 	private List<Product> products;
 
 	public CustomOrder() {

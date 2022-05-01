@@ -18,6 +18,7 @@ public class Product implements Serializable {
 	@Id
 	private String name;
 
+	@Column(nullable = false)
 	private int fee;
 
 	//bi-directional many-to-many association to ServicePackage

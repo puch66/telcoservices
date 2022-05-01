@@ -20,10 +20,11 @@ public class Service implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Column(nullable = false)
 	private String service_type;
 
 	//bi-directional many-to-one association to ServicePackage
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="serPackage")
 	private ServicePackage servicePackage;
 

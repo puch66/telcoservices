@@ -19,13 +19,16 @@ public class AuditingTable implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Column(nullable = false)
 	private int amount;
 
+	@Column(nullable = false)
 	private String email;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date rejectionDateTime;
 
+	@Column(nullable = false)
 	private String username;
 
 	public AuditingTable() {

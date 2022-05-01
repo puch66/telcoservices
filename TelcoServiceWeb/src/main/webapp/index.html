@@ -19,7 +19,11 @@
     		
 	</head>
 	<body>
-		<div class="row">
+		<script th:if="${regSuccess} != null">
+			alert("User correctly registered");
+		</script>
+		
+		<div class="row w-100">
 			<div class="col col-6">
 				<img src="static/images/logo.jpg" class="loginlogo" alt="TELCO">	
 			</div>
@@ -34,7 +38,7 @@
 		</div>
 		<br><br><br><br><br>
 		
-		<div th:if="${session.user} == null" class="row">
+		<div th:if="${session.user} == null" class="row row mt-3 pt-3 mx-auto w-100">
 			<div class="col col-6">
 				<div class="telcocol6">
 					<h3 class="telcotitle">Login</h3>
@@ -68,14 +72,14 @@
 						<h3 th:unless="${registerMsg} == null" th:text="${registerMsg}" class="telcoerrortext"></h3>
 						<input type="submit" class="btn btn-warning telcobtn" value="Register">
 					</form>
-					<br><br><br><br><br>
+					<br>
 				</div>
 			</div>
 		</div>
 		
-		<div th:unless="${session.user} == null">
-			<p>You're already logged in!</p>
-			<a href="/TelcoServiceWeb/logout">Logout</a> or <a href="/TelcoServiceWeb/home">go to homepage</a>
+		<div th:unless="${session.user} == null" style="margin-left:30px; margin-top:20px;">
+			<h3 class="telcotitle">You're already logged in!</h3>
+			<a class="telcotext telcomedium" href="/TelcoServiceWeb/logout?type=c">Logout</a><span class="telcotext telcomedium"> or </span><a class="telcotext telcomedium" href="/TelcoServiceWeb/home">go to homepage</a>
 		</div>
 		
 	</body>

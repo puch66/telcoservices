@@ -47,6 +47,8 @@ public class EmployeeHome extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().removeAttribute("order");
+		
 		String path = "/WEB-INF/employeeHome.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());

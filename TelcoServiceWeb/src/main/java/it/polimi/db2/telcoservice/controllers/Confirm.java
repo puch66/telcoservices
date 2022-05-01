@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,9 +28,9 @@ import it.polimi.db2.telco.entities.Customer;
 import it.polimi.db2.telco.entities.Product;
 import it.polimi.db2.telco.entities.ServicePackage;
 import it.polimi.db2.telco.entities.ValidityPeriod;
-import it.polimi.db2.telco.exceptions.BadCredentialsException;
 import it.polimi.db2.telco.services.CustomOrderService;
 import it.polimi.db2.telco.services.ServicePackageService;
+import it.polimi.db2.telco.services.ValidityPeriodService;
 
 /**
  * Servlet implementation class Confirm
@@ -42,6 +43,8 @@ public class Confirm extends HttpServlet {
 	private ServicePackageService spService;
 	@EJB(name = "it.polimi.db2.telco.services/CustomOrderService")
 	private CustomOrderService customOrderService;
+	@EJB(name = "it.polimi.db2.telco.services/ValidityPeriodService")
+	private ValidityPeriodService vpService;
     
     public Confirm() {
         super();
@@ -61,27 +64,44 @@ public class Confirm extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		
+		String packageSelectName = StringEscapeUtils.escapeJava(request.getParameter("packageSelect"));
+		ServicePackage packageSelected = spService.findFormPackage(packageSelectName);
+		if(packageSelected == null) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not find package");
+			return;
+		}
+		
 		String sDate = StringEscapeUtils.escapeJava(request.getParameter("startDate"));
-		Date startDate = Calendar.getInstance().getTime();
+		Date startDate = null;
 		try {
 			startDate = new SimpleDateFormat("yyyy-MM-dd").parse(sDate);
 		} catch (ParseException e1) {
 			e1.printStackTrace();
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not parse date");
+			return;
+		}
+		
+		if(startDate.before(Calendar.getInstance().getTime())) {
+			request.setAttribute("errorMsg", "Start date of subscription cannot be earlier than today");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/buyservices?packageSelect="+packageSelectName);
+			dispatcher.forward(request, response);
+			return;
 		}
 		
 		Customer customer = (Customer) request.getSession().getAttribute("user");
 		
-		String feeAndDuration = StringEscapeUtils.escapeJava(request.getParameter("validityPeriod"));
-		String[] validityPeriod = feeAndDuration.split("-");
-		
-		String packageSelectName = StringEscapeUtils.escapeJava(request.getParameter("packageSelect"));
-		ServicePackage packageSelected = spService.findFormPackage(packageSelectName);
-		
+		String validityPeriod = StringEscapeUtils.escapeJava(request.getParameter("validityPeriod"));
 		ValidityPeriod validity = null;
-		for(ValidityPeriod vp: packageSelected.getValidityPeriods() ) {
-			if(vp.getFee() == Integer.parseInt(validityPeriod[0]) && vp.getDuration() == Integer.parseInt(validityPeriod[1]))
-				validity = vp;
+		try {
+			validity = vpService.findValidity(Integer.parseInt(validityPeriod));
+		} catch(NumberFormatException e) {
+			e.printStackTrace(); //debug
+			request.setAttribute("errorMsg", "Please fill out all fields");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/buyservices?packageSelect="+packageSelectName);
+			dispatcher.forward(request, response);
+			return;
 		}
+		
 		
 		List<Product> optSelect = new ArrayList<Product>();
 		String reqproduct;
@@ -94,35 +114,41 @@ public class Confirm extends HttpServlet {
 			}
 		}
 		
-		int totalValue = (totProductFees+Integer.parseInt(validityPeriod[0]))*Integer.parseInt(validityPeriod[1]);
-		
-		try {
-			CustomOrder order = customOrderService.createAbstractOrder(startDate, totalValue, customer, packageSelected, validity, optSelect);
-			request.getSession().setAttribute("order", order);
-		} catch (BadCredentialsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//int totalValue = (totProductFees+Integer.parseInt(validityPeriod[0]))*Integer.parseInt(validityPeriod[1]);
+		int totalValue = (totProductFees+validity.getFee())*validity.getDuration();
+
+		CustomOrder order = customOrderService.createAbstractOrder(startDate, totalValue, customer, packageSelected, validity, optSelect);
+		request.getSession().setAttribute("order", order);
 		
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Customer c = (Customer) request.getSession().getAttribute("user");
+		if(c == null) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not confirm order");
+			return;
+		}
+		
 		String orderId = StringEscapeUtils.escapeJava(request.getParameter("id"));
 		CustomOrder order = (CustomOrder) request.getSession().getAttribute("order");
 		String path;
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		if(order == null && orderId == null) {
-			path = getServletContext().getContextPath() + "/home";
-			ctx.setVariable("cannotConfirm", "Not allowed to enter confirmation page");
-			response.sendRedirect(path);
+		if(order == null && orderId == null) {			
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not confirm order");
+			return;
 		}
 		else {
 			if(orderId != null) {
-				order = customOrderService.findOrder(Integer.parseInt(orderId));
+				try {
+					order = customOrderService.findOrder(Integer.parseInt(orderId));
+				} catch(NumberFormatException e) {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not confirm order");
+					return;
+				}
 			}
-			else order.setCustomer((Customer) request.getSession().getAttribute("user"));
+			else order.setCustomer(c);
 			request.getSession().setAttribute("order", order);
 			
 			path = "/WEB-INF/confirmation_page.html";

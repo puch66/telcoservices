@@ -55,10 +55,11 @@ public class Register extends HttpServlet {
 			return;
 		}
 		
-		String path = getServletContext().getContextPath() + "/index";
+		request.setAttribute("regSuccess", "User correctly registered");
 		String redirect = StringEscapeUtils.escapeJava(request.getParameter("redirect"));
-		if(redirect != null) path += "?redirect=" + redirect;
-		response.sendRedirect(path);
+		if(redirect != null) request.setAttribute("redirect", "true");
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/index");
+		dispatcher.forward(request, response);
 	}
 
 }

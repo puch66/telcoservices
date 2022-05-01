@@ -5,41 +5,45 @@
   	 	<meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
     	
-    	<title>TELCO | ENTRY PAGE</title>
+    	<title>TELCO | BUY SERVICES</title>
     	
     	<!-- Bootstrap CSS -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 		
 		<!-- Personal CSS -->
-    	<link rel=stylesheet href="static/styles/general.css" type="text/css">		
+    	<link rel=stylesheet href="static/styles/general.css" type="text/css">
+    	
+    	<!-- Personal Font -->
+    	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Optima:bold,serif">	
     		
 	</head>
 	<body>
-		<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
+		<nav class="navbar sticky-top navbar-expand-lg navbar-dark telconav">
 		    <div class="container">
 		        <a class="navbar-brand" href="#">
 		        	<img src="static/images/logo.jpg" alt="telco" class="logo">
 		        </a>      
 
 				<div class="collapse navbar-collapse" id="navbarNav">
-			      <ul class="navbar-nav navsize" style="margin-left:-150px;">
+			      <ul class="navbar-nav navsize me-auto" style="margin-left:-150px;">
 			        <li class="nav-item">
 			          <a class="nav-link telcotext" aria-current="page" href="/TelcoServiceWeb/home">Home</a>
 			        </li>
 			        <li class="nav-item">
 			          <a class="nav-link telcotext active" href="/TelcoServiceWeb/buyservices">Buy services</a>
 			        </li>
-			        <li th:if="${session.user != null}" class="nav-item dropdown">
+			      </ul>
+			      <ul class="navbar-nav navsize ms-auto">
+			        <li th:if="${session.user} != null" class="nav-item dropdown">
 				          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 				            <span th:text="${session.user.username}"></span>
 				          </a>
 				          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				            <li><a class="dropdown-item" href="/TelcoServiceWeb/logout">Logout</a></li>
+				            <li><a class="dropdown-item" href="/TelcoServiceWeb/logout?type=c">Logout</a></li>
 				          </ul>
 				    </li>
-			        <li th:unless="${session.user != null}" class="nav-item telcotext">
-			        <!-- mettere a destra-->
+			        <li th:unless="${session.user} != null" class="nav-item telcotext">
 			          <a class="nav-link" href="/TelcoServiceWeb/">Login</a>
 			        </li>
 			      </ul>
@@ -48,40 +52,42 @@
 		</nav>
 		
 		<div align="left">
-			<p>Here you will be able to buy the service that you like</p>
-			
+		
 			<!-- select package if no one already selected -->
 			<form th:if="${packageSelected} == null" method="GET" action="/TelcoServiceWeb/buyservices" id="form">
-					<h3 class="telcotext">Select the package you want to buy</h3>
-						
-					<select class="form-select" id="packageSelect" name="packageSelect">
-						<option selected>Select</option>
-						<option th:each="p : ${packages}" th:text="${p}" th:name="${p}" th:value="${p}" th:id="${p}">
+					<h3 class="telcotitle" style="padding:10px;">Select the package you want to buy</h3>	
+					<select class="form-select w-25 telcoinputtext telcomedium telcoselect" id="packageSelect" name="packageSelect">
+						<option class="telcoinputtext telcomedium" selected>Select</option>
+						<option class="telcoinputtext telcomedium" th:each="p : ${packages}" th:text="${p}" th:name="${p}" th:value="${p}" th:id="${p}">
 						</option>
 					</select>
-					<input type="submit" class="btn btn-success telcotext" value="Confirm">
+					<input type="submit" class="btn btn-warning telcobtn telcoselect" value="Confirm">
 			</form>
 					
 			<!-- otherwise, display form for package data selection -->
 			<form th:unless="${packageSelected} == null" method="POST" action="/TelcoServiceWeb/confirm" id="form">
-				<select class="form-select" name="packageSelect" disabled>
-					<option th:text="${packageSelected.name}" selected></option>
+				<h3 class="telcotitle" style="padding:10px;">Add details</h3>
+				<select class="form-select w-25 telcoinputtext telcomedium telcoselect" name="packageSelect" disabled>
+					<option class="telcoinputtext telcomedium" th:text="${packageSelected.name}" selected></option>
 				</select>
 				<input type="hidden" name="packageSelect" th:value="${packageSelected.name}">
-				<select class="form-select" id="validityPeriod" name="validityPeriod">
-					<option selected>Select</option>
-					<option th:each="v : ${packageSelected.validityPeriods}" th:text="${v.fee}+' for '+${v.duration}+' months'" th:name="${v.fee}+'-'+${v.duration}" th:value="${v.fee}+'-'+${v.duration}" th:id="${v.fee}+'-'+${v.duration}">
+				<select class="form-select w-25 telcoinputtext telcomedium telcoselect" id="validityPeriod" name="validityPeriod">
+					<option class="telcoinputtext telcomedium" selected>Select</option>
+					<option class="telcoinputtext telcomedium" th:each="v : ${packageSelected.validityPeriods}" th:text="${v.fee}+' euros for '+${v.duration}+' months'" th:name="${v.id}" th:value="${v.id}" th:id="${v.id}">
 					</option>
 				</select>
-				<div class="form-check">
+				<div class="form-check telcocheck">
 				  <div th:each="pr : ${packageSelected.products}">
-				  	<input class="form-check-input" type="checkbox" th:name="${pr.name}" th:id="${pr.name}">
-				  	<label class="form-check-label" th:for="${pr.name}" th:text="${pr.name}"></label>
-				  </div> 
+				  	<input class="form-check-input telcocheck" type="checkbox" th:name="${pr.name}" th:id="${pr.name}">
+				  	<label class="form-check-label telcotext telcomedium" th:for="${pr.name}" th:text="${pr.name}"></label>
+				  </div>
 				</div>
-				<h3>Select start date of subscription</h3>
-				<input type="date" name="startDate">
-				<input type="submit" class="btn btn-success telcotext" value="Confirm">
+				<br><br>
+				<span class="telcotext telcomedium telcocheck">Select start date of subscription</span>
+				<input type="date" name="startDate" class="telcoinputtext telcomedium" style="margin-left:30px; margin-bottom:30px;" required>
+				<h3 th:unless="${errorMsg} == null" th:text="${errorMsg}" class="telcoerrortext telcosmall telcocheck"></h3>
+				<br>
+				<input type="submit" class="btn btn-warning telcobtn telcoselect" value="Confirm">
 			</form>
 		</div>
 	</body>

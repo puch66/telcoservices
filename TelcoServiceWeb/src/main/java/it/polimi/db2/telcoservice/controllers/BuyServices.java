@@ -41,6 +41,8 @@ public class BuyServices extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().removeAttribute("order");
+		
 		String packageSelectName = StringEscapeUtils.escapeJava(request.getParameter("packageSelect"));
 		
 		String path = "/WEB-INF/buy_service.html";

@@ -6,7 +6,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Servlet implementation class Logout
@@ -20,11 +21,22 @@ public class Logout extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.invalidate();;
-		}
+		request.getSession().removeAttribute("order");
+		
 		String path = getServletContext().getContextPath() + "/index";
+		
+		String type = StringEscapeUtils.escapeJava(request.getParameter("type"));
+		if(type == null) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Logout needs a parameter type");
+			return;
+		}
+		if(type.equals("c")) request.getSession().removeAttribute("user");
+		else if(type.equals("e")) {
+			request.getSession().removeAttribute("employee");
+			path = getServletContext().getContextPath() + "/employee/index";
+		}
+		
+		
 		response.sendRedirect(path);
 	}
 

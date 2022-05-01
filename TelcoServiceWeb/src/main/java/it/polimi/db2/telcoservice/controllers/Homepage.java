@@ -46,6 +46,8 @@ public class Homepage extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().removeAttribute("order");
+		
 		Customer c = (Customer) request.getSession().getAttribute("user");
 		List<CustomOrder> rejectedOrders = null;
 		if(c != null) {

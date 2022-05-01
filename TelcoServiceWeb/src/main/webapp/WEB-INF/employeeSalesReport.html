@@ -16,30 +16,30 @@
     	
 	</head>
 	<body>
-		<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
+		<nav class="navbar sticky-top navbar-expand-lg navbar-dark telconav">
 		    <div class="container">
 		        <a class="navbar-brand" href="#">
 		        	<img src="../static/images/logo.jpg" alt="telco" class="logo">
 		        </a>      
-
 				<div class="collapse navbar-collapse" id="navbarNav">
-			      <ul class="navbar-nav navsize" style="margin-left:-150px;">
+			      <ul class="navbar-nav navsize me-auto" style="margin-left:-150px;">
 			        <li class="nav-item">
-			          <a class="nav-link telcotext active" aria-current="page" href="/TelcoServiceWeb/employee/home">Home</a>
+			          <a class="nav-link telcotext" aria-current="page" href="/TelcoServiceWeb/employee/home">Home</a>
 			        </li>
 			        <li class="nav-item">
-			          <a class="nav-link telcotext" href="#">Sales Report</a>
+			          <a class="nav-link telcotext active" href="#">Sales Report</a>
 			        </li>
+			      </ul>
+			      <ul class="navbar-nav navsize ms-auto">
 			        <li th:if="${session.employee} != null" class="nav-item dropdown">
 				          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 				            <span th:text="${session.employee.username}"></span>
 				          </a>
 				          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				            <li><a class="dropdown-item" href="/TelcoServiceWeb/logout">Logout</a></li>
+				            <li><a class="dropdown-item" href="/TelcoServiceWeb/logout?type=e">Logout</a></li>
 				          </ul>
 				    </li>
 			        <li th:unless="${session.employee} != null" class="nav-item telcotext">
-			        <!-- mettere a destra-->
 			          <a class="nav-link" href="/TelcoServiceWeb/employee/index">Login</a>
 			        </li>
 			      </ul>
@@ -47,58 +47,150 @@
 		    </div>
 		</nav>
 		
-		<div align="left">
-		<p>Sales Report Page</p>
-		<ul th:unless="${#lists.isEmpty(tpp)}">
-			<li>Total Purchases Per Package</li>
-			<li th:each="p:${tpp}">
-				<span th:text="${p.package_}"></span> Has been sold <span th:text="${p.total}"></span> times
-			</li>
-		</ul>
-		<ul th:unless="${#lists.isEmpty(tppvp)}">
-		<li>Total Purchases Per Package and Validity Period</li>
-			<li th:each="p:${tppvp}">
-				<span th:text="${p.package_}"></span> with validity <span th:text="${p.validity}"></span> months has been sold <span th:text="${p.total}"></span> times
-			</li>
-		</ul>
-		<ul th:unless="${#lists.isEmpty(sv)}">
-		<li>Sales Values</li>
-			<li th:each="p:${sv}">
-				<span th:text="${p.package_}"></span>
-				Total sale: <span th:text="${p.totalSale}"></span> euros
-				Sale without products: <span th:text="${p.saleWithoutProd}"></span> euros
-			</li>
-		</ul>
-		<ul th:unless="${#lists.isEmpty(ap)}">
-			<li>Average of Products Sold Per Package</li>
-			<li th:each="p:${ap}">
-				For package <span th:text="${p.package_}"></span> products have been sold on average <span th:text="${p.averageProducts}"></span> times
-			</li>
-		</ul>
-		<ul th:unless="${#lists.isEmpty(insolvents)}">
-			<li>Insolvent users</li>
-			<li th:each="i:${insolvents}">
-				<span th:text="${i.username}"></span> with email <span th:text="${i.email}"></span>
-			</li>
-		</ul>
-		<ul th:unless="${#lists.isEmpty(rejectedOrders)}">
-			<li>Suspended orders</li>
-			<li th:each="r:${rejectedOrders}">
-				Order #<span th:text="${r.id}"></span> created on <span th:text="${#dates.format(r.creationDate, 'dd-MM-yyyy HH:mm')}"></span> with a cost of <span th:text="${r.totalValue}"></span> euros by <span th:text="${r.customer.username}"></span>
-			</li>
-		</ul>
-		<ul th:unless="${#lists.isEmpty(alerts)}">
-			<li>Alerts</li>
-			<li th:each="a:${alerts}">
-				<span th:text="${a.email}"></span> - amount of <span th:text="${a.amount}"></span> euros on <span th:text="${a.rejectionDateTime}"></span>
-			</li>
-		</ul>
-		<ul th:unless="${#lists.isEmpty(bp)}">
-			<li>Best Seller Product</li>
-			<li th:each="p:${bp}">
-				<span th:text="${p.product}"></span> with a total sale of <span th:text="${p.totalSales}"></span> euros
-			</li>
-		</ul>
+		<div th:unless="${#lists.isEmpty(tpp)}" align="left">
+			<h3 class="telcotitle" style="padding:10px;">Total Purchases Per Package</h3>
+			<div class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">PACKAGE</h3></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">TOTAL PURCHASES</h3></div>
+				<div class="col col-1 firstrightcol"></div>
+			</div>
+			<div th:each="p:${tpp}" class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${p.package_}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${p.total}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 rightcol"></div>
+			</div>
+			<br><br>
+		</div>
+
+		<div th:unless="${#lists.isEmpty(tppvp)}" align="left">
+			<h3 class="telcotitle" style="padding:10px;">Total Purchases Per Package and Validity Period</h3>
+			<div class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">PACKAGE</h3></div>
+				<div class="col col-1 firstrow"><h3 class="telcotitle telcomedium">VALIDITY</h3></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">TOTAL PURCHASES</h3></div>
+				<div class="col col-1 firstrightcol"></div>
+			</div>
+			<div th:each="p:${tppvp}" class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${p.package_}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 telcoordercol"><span th:text="${p.validity}" class="telcotext telcomedium"></span><span class="telcotext telcomedium"> months</span></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${p.total}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 rightcol"></div>
+			</div>
+			<br><br>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty(sv)}" align="left">
+			<h3 class="telcotitle" style="padding:10px;">Sales Values</h3>
+			<div class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">PACKAGE</h3></div>
+				<div class="col col-1 firstrow"><h3 class="telcotitle telcomedium">TOTAL SALE</h3></div>
+				<div class="col col-1 firstrow"><h3 class="telcotitle telcomedium">SALE WITHOUT PRODUCT</h3></div>
+				<div class="col col-1 firstrightcol"></div>
+			</div>
+			<div th:each="p:${sv}" class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${p.package_}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 telcoordercol"><span th:text="${p.totalSale}" class="telcotext telcomedium"></span><span class="telcotext telcomedium">&euro;</span></div>
+				<div class="col col-1 telcoordercol"><span th:text="${p.saleWithoutProd}" class="telcotext telcomedium"></span><span class="telcotext telcomedium">&euro;</span></div>
+				<div class="col col-1 rightcol"></div>
+			</div>
+			<br><br>
+		</div>
+
+		<div th:unless="${#lists.isEmpty(ap)}" align="left">
+			<h3 class="telcotitle" style="padding:10px;">Average of Products Sold Per Package</h3>
+			<div class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">PACKAGE</h3></div>
+				<div class="col col-1 firstrow"><h3 class="telcotitle telcomedium">AVERAGE</h3></div>
+				<div class="col col-1 firstrightcol"></div>
+			</div>
+			<div th:each="p:${ap}" class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${p.package_}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 telcoordercol"><h3 th:text="${p.averageProducts}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 rightcol"></div>
+			</div>
+			<br><br>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty(insolvents)}" align="left">
+			<h3 class="telcotitle" style="padding:10px;">Insolvent users</h3>
+			<div class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">USER</h3></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">EMAIL</h3></div>
+				<div class="col col-1 firstrightcol"></div>
+			</div>
+			<div th:each="i:${insolvents}" class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${i.username}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${i.email}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 rightcol"></div>
+			</div>
+			<br><br>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty(rejectedOrders)}" align="left">
+			<h3 class="telcotitle" style="padding:10px;">Suspended orders</h3>
+			<div class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-1 firstrow"><h3 class="telcotitle telcomedium">ID</h3></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">CREATION DATE</h3></div>
+				<div class="col col-1 firstrow"><h3 class="telcotitle telcomedium">TOTAL VALUE</h3></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">USER</h3></div>
+				<div class="col col-1 firstrightcol"></div>
+			</div>
+			<div th:each="r:${rejectedOrders}" class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-1 telcoordercol"><h3 th:text="${r.id}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${#dates.format(r.creationDate, 'dd-MM-yyyy HH:mm')}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 telcoordercol"><span th:text="${r.totalValue}" class="telcotext telcomedium"></span><span class="telcotext telcomedium">&euro;</span></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${r.customer.username}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 rightcol"></div>
+			</div>
+			<br><br>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty(alerts)}" align="left">
+			<h3 class="telcotitle" style="padding:10px;">Alerts</h3>
+			<div class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">EMAIL</h3></div>
+				<div class="col col-1 firstrow"><h3 class="telcotitle telcomedium">AMOUNT</h3></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">REJECTION DATE</h3></div>
+				<div class="col col-1 firstrightcol"></div>
+			</div>
+			<div th:each="a:${alerts}" class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${a.email}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 telcoordercol"><span th:text="${a.amount}" class="telcotext telcomedium"></span><span class="telcotext telcomedium">&euro;</span></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${#dates.format(a.rejectionDateTime, 'dd-MM-yyyy HH:mm')}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 rightcol"></div>
+			</div>
+			<br><br>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty(bp)}" align="left">
+			<h3 class="telcotitle" style="padding:10px;">Best Seller Product</h3>
+			<div class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 firstrow"><h3 class="telcotitle telcomedium">PRODUCT</h3></div>
+				<div class="col col-1 firstrow"><h3 class="telcotitle telcomedium">TOTAL SALES</h3></div>
+				<div class="col col-1 firstrightcol"></div>
+			</div>
+			<div th:each="p:${bp}" class="row w-100 telcoorder">
+				<div class="col col-2 leftcol" style="background-color:#000080;"></div>
+				<div class="col col-2 telcoordercol"><h3 th:text="${p.product}" class="telcotext telcomedium"></h3></div>
+				<div class="col col-1 telcoordercol"><span th:text="${p.totalSales}" class="telcotext telcomedium"></span><span class="telcotext telcomedium">&euro;</span></div>
+				<div class="col col-1 rightcol"></div>
+			</div>
+			<br><br>
 		</div>
 	</body>
 </html>

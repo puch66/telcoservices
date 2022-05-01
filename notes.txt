@@ -1,0 +1,7 @@
+ServicePackage -> Service : EAGER (homepage, confirmation)
+ServicePackage -> Product : EAGER (homepage, buy services)
+ServicePackage -> ValidityPeriod : EAGER (buy services)
+CustomOrder -> ServicePackage : EAGER (confirmation)
+CustomOrder -> Product : EAGER (confirmation)
+CustomOrder -> ValidityPeriod : EAGER (confirmation)
+CustomOrder -> Customer : EAGER (sales report)

@@ -15,10 +15,10 @@ drop table if exists telcodb.customer;
 
 create table telcodb.customer 
 	( 
-		username varchar(50),
+		username varchar(50) NOT NULL,
         password varchar(50) NOT NULL,
         email varchar(50) UNIQUE NOT NULL,
-        isInsolvent int NOT NULL DEFAULT 0,
+        isInsolvent tinyint(1) NOT NULL DEFAULT 0,
         PRIMARY KEY (username),
         CONSTRAINT positive_insolvent CHECK (isInsolvent >= 0)
 	);
@@ -35,9 +35,8 @@ create table validityPeriod
 		id int NOT NULL auto_increment,
         duration int NOT NULL,
         fee int NOT NULL,
-        servicePackage int NOT NULL,
+        servicePackage int,
         PRIMARY KEY (id),
-        #PRIMARY KEY (duration,servicePackage),
         CONSTRAINT id_package FOREIGN KEY (servicePackage) REFERENCES telcodb.servicePackage (id) ON DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT duration_12_24_36 CHECK (duration = 12 or duration = 24 or duration = 36)
     );
@@ -45,7 +44,7 @@ create table validityPeriod
 create table telcodb.service
 	(
 		id int NOT NULL auto_increment,
-        serPackage int, #NOT NULL ?
+        serPackage int,
         service_type varchar(50) NOT NULL,
         num_minutes int,
         num_SMS int,
@@ -82,11 +81,11 @@ create table telcodb.customOrder
         validity int NOT NULL,
         totalValue int NOT NULL,
         startDate date NOT NULL,
-        isValid int NOT NULL,
+        isValid tinyint(1) NOT NULL,
         PRIMARY KEY(id),
         CONSTRAINT id_user FOREIGN KEY (username) REFERENCES telcodb.customer (username) ON DELETE CASCADE ON UPDATE CASCADE,
-        CONSTRAINT id_service4 FOREIGN KEY (servicePackage) REFERENCES telcodb.servicePackage (id),
-        CONSTRAINT id_validity FOREIGN KEY (validity) REFERENCES telcodb.validityPeriod (id)
+        CONSTRAINT id_service4 FOREIGN KEY (servicePackage) REFERENCES telcodb.servicePackage (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT id_validity FOREIGN KEY (validity) REFERENCES telcodb.validityPeriod (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
     
 create table telcodb.selectedProductsForOrder
@@ -94,8 +93,8 @@ create table telcodb.selectedProductsForOrder
 		product varchar(50) NOT NULL,
         customOrder int NOT NULL,
         PRIMARY KEY (product, customOrder),
-        CONSTRAINT id_product2 FOREIGN KEY (product) REFERENCES telcodb.product (name),
-        CONSTRAINT id_order FOREIGN KEY (customOrder) REFERENCES telcodb.customOrder (id)
+        CONSTRAINT id_product2 FOREIGN KEY (product) REFERENCES telcodb.product (name) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT id_order FOREIGN KEY (customOrder) REFERENCES telcodb.customOrder (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
 create table  telcodb.serviceActivationSchedule
@@ -104,7 +103,7 @@ create table  telcodb.serviceActivationSchedule
         username varchar(50) NOT NULL,
         activationDate date NOT NULL,
         deactivationDate date NOT NULL,
-        CONSTRAINT id_customer FOREIGN KEY (username) REFERENCES telcodb.customer (username),
+        CONSTRAINT id_customer FOREIGN KEY (username) REFERENCES telcodb.customer (username) ON DELETE CASCADE ON UPDATE CASCADE,
         PRIMARY KEY(id)
     );
     
@@ -113,8 +112,8 @@ create table  telcodb.productsForActivationSchedule
 		product varchar(50) NOT NULL,
         activationSchedule int NOT NULL,
         PRIMARY KEY (product, activationSchedule),
-        CONSTRAINT id_product3 FOREIGN KEY (product) REFERENCES telcodb.product (name),
-        CONSTRAINT id_schedule FOREIGN KEY (activationSchedule) REFERENCES telcodb.serviceActivationSchedule (id)
+        CONSTRAINT id_product3 FOREIGN KEY (product) REFERENCES telcodb.product (name) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT id_schedule FOREIGN KEY (activationSchedule) REFERENCES telcodb.serviceActivationSchedule (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
     
 create table  telcodb.servicesForActivationSchedule
@@ -122,8 +121,8 @@ create table  telcodb.servicesForActivationSchedule
 		service int NOT NULL,
         activationSchedule int NOT NULL,
         PRIMARY KEY (service, activationSchedule),
-        CONSTRAINT id_service FOREIGN KEY (service) REFERENCES telcodb.service (id),
-        CONSTRAINT id_schedule2 FOREIGN KEY (activationSchedule) REFERENCES telcodb.serviceActivationSchedule (id)
+        CONSTRAINT id_service FOREIGN KEY (service) REFERENCES telcodb.service (id) ON DELETE CASCADE ON UPDATE CASCADE,
+        CONSTRAINT id_schedule2 FOREIGN KEY (activationSchedule) REFERENCES telcodb.serviceActivationSchedule (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
     
 create table  telcodb.auditingTable
@@ -138,7 +137,7 @@ create table  telcodb.auditingTable
     
 create table employee
 	( 
-		username varchar(50),
+		username varchar(50) NOT NULL,
         password varchar(50) NOT NULL,
         PRIMARY KEY (username)
 	);

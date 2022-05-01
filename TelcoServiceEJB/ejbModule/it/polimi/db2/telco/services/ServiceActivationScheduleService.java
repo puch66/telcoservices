@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -13,6 +14,7 @@ import it.polimi.db2.telco.entities.CustomOrder;
 import it.polimi.db2.telco.entities.Product;
 import it.polimi.db2.telco.entities.Service;
 import it.polimi.db2.telco.entities.ServiceActivationSchedule;
+import it.polimi.db2.telco.exceptions.BadCredentialsException;
 
 /**
  * Session Bean implementation class ServiceActivationScheduleService
@@ -25,20 +27,24 @@ public class ServiceActivationScheduleService {
     public ServiceActivationScheduleService() {
     }
 
-    public void createActivationSchedule(CustomOrder o) {
-    	ServiceActivationSchedule sas = new ServiceActivationSchedule();
-    	sas.setCustomer(o.getCustomer());
-    	sas.setActivationDate(o.getStartDate());
-    	sas.setDeactivationDate(DateUtils.addMonths(o.getStartDate(), o.getValidityPeriod().getDuration()));
-    	em.persist(sas);
-    	em.flush();
-    	List<Product> productsToAdd = new ArrayList<>(o.getProducts());
-    	for(Product p:productsToAdd) {
-    		this.addProductToSas(p.getName(), sas.getId());
-    	}
-    	List<Service> servicesToAdd = new ArrayList<>(o.getServicePackageBean().getServices());
-    	for(Service s:servicesToAdd) {
-    		this.addServiceToSas(s.getId(), sas.getId());
+    public void createActivationSchedule(CustomOrder o) throws BadCredentialsException {
+    	try {
+        	ServiceActivationSchedule sas = new ServiceActivationSchedule();
+        	sas.setCustomer(o.getCustomer());
+        	sas.setActivationDate(o.getStartDate());
+        	sas.setDeactivationDate(DateUtils.addMonths(o.getStartDate(), o.getValidityPeriod().getDuration()));
+        	em.persist(sas);
+        	em.flush();
+        	List<Product> productsToAdd = new ArrayList<>(o.getProducts());
+        	for(Product p:productsToAdd) {
+        		this.addProductToSas(p.getName(), sas.getId());
+        	}
+        	List<Service> servicesToAdd = new ArrayList<>(o.getServicePackageBean().getServices());
+        	for(Service s:servicesToAdd) {
+        		this.addServiceToSas(s.getId(), sas.getId());
+        	}
+    	} catch(PersistenceException e) {
+    		throw new BadCredentialsException("Could not create activation schedule");
     	}
     }
     

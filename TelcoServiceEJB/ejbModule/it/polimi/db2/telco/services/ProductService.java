@@ -5,8 +5,10 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 import it.polimi.db2.telco.entities.Product;
+import it.polimi.db2.telco.exceptions.BadCredentialsException;
 
 /**
  * Session Bean implementation class ProductService
@@ -23,10 +25,15 @@ public class ProductService {
     	return em.createNamedQuery("Product.findAll", Product.class).getResultList();
     }
     
-    public void createProduct(String name, int fee) {
-    	Product p = new Product();
-    	p.setName(name);
-    	p.setFee(fee);
-    	em.persist(p);
+    public void createProduct(String name, int fee) throws BadCredentialsException {
+    	try {
+        	Product p = new Product();
+        	p.setName(name);
+        	p.setFee(fee);
+        	em.persist(p);
+        	em.flush();
+    	}  catch(PersistenceException e) {
+    		throw new BadCredentialsException("Could not create product");
+    	}
     }
 }

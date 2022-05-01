@@ -19,6 +19,8 @@ public class Service implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	private String service_type;
 
 	//bi-directional many-to-one association to ServicePackage
 	@ManyToOne
@@ -54,6 +56,14 @@ public class Service implements Serializable {
 
 	public void setServiceActivationSchedules(List<ServiceActivationSchedule> serviceActivationSchedules) {
 		this.serviceActivationSchedules = serviceActivationSchedules;
+	}
+
+	public String getService_type() {
+		return service_type;
+	}
+
+	public void setService_type(String service_type) {
+		this.service_type = service_type;
 	}
 
 }

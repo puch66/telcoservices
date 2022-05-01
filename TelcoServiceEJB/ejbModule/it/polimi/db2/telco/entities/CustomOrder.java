@@ -14,6 +14,7 @@ import java.util.List;
 @Table(name="customOrder")
 @NamedQuery(name="CustomOrder.findRejectedOrders", query="SELECT o FROM CustomOrder o WHERE o.customer = ?1 AND o.isValid <> 0")
 @NamedQuery(name="CustomOrder.findAllRejectedOrders", query="SELECT o FROM CustomOrder o WHERE o.isValid <> 0")
+@NamedQuery(name="CustomOrder.getAmount", query="SELECT sum(o.totalValue*o.isValid) FROM CustomOrder o WHERE o.isValid <> 0 and o.customer = ?1 GROUP BY o.customer")
 public class CustomOrder implements Serializable {
 	private static final long serialVersionUID = 1L;
 

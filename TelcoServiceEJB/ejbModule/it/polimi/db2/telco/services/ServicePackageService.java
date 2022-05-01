@@ -6,11 +6,13 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 import it.polimi.db2.telco.entities.Product;
 import it.polimi.db2.telco.entities.Service;
 import it.polimi.db2.telco.entities.ServicePackage;
 import it.polimi.db2.telco.entities.ValidityPeriod;
+import it.polimi.db2.telco.exceptions.BadCredentialsException;
 
 /**
  * Session Bean implementation class ServicePackageService
@@ -25,6 +27,7 @@ public class ServicePackageService {
     }
     
     public List<ServicePackage> findAllPackages() {
+    	em.getEntityManagerFactory().getCache().evictAll();
     	return em.createNamedQuery("ServicePackage.findAll", ServicePackage.class).getResultList();
     }
     
@@ -36,7 +39,7 @@ public class ServicePackageService {
     	return em.createNamedQuery("ServicePackage.findFormPackage", ServicePackage.class).setParameter(1, name).getSingleResult();
     }
     
-    public void createServicePackage(String name, int vp12, int vp24, int vp36, List<Product> productsSelected, List<Service> servicesSelected) {
+    public void createServicePackage(String name, int vp12, int vp24, int vp36, List<Product> productsSelected, List<Service> servicesSelected) throws BadCredentialsException {
     	ServicePackage sp = new ServicePackage();
     	sp.setName(name);
     	
@@ -59,7 +62,12 @@ public class ServicePackageService {
     		sp.addService(s);
     	}
     	
-    	em.persist(sp);
+    	try {
+    		em.persist(sp);
+    		em.flush();
+    	} catch(PersistenceException e) {
+    		throw new BadCredentialsException("Could not create service package");
+    	}
     }
 
 }

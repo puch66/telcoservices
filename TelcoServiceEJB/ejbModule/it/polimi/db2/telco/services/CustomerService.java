@@ -41,9 +41,8 @@ public class CustomerService {
 			customer.setUsername(username);
 			customer.setPassword(password);
 			customer.setEmail(email);
-			//ADD TRY CATCH -- not working
 			em.persist(customer);
-			//em.flush();
+			em.flush();
 		} catch (PersistenceException e) {
 			throw new BadCredentialsException("Could not register customer");
 		}

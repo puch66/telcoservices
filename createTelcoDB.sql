@@ -18,7 +18,7 @@ create table telcodb.customer
 		username varchar(50) NOT NULL,
         password varchar(50) NOT NULL,
         email varchar(50) UNIQUE NOT NULL,
-        isInsolvent tinyint(1) NOT NULL DEFAULT 0,
+        isInsolvent int NOT NULL DEFAULT 0,
         PRIMARY KEY (username),
         CONSTRAINT positive_insolvent CHECK (isInsolvent >= 0)
 	);
@@ -81,7 +81,7 @@ create table telcodb.customOrder
         validity int NOT NULL,
         totalValue int NOT NULL,
         startDate date NOT NULL,
-        isValid tinyint(1) NOT NULL,
+        isValid int NOT NULL,
         PRIMARY KEY(id),
         CONSTRAINT id_user FOREIGN KEY (username) REFERENCES telcodb.customer (username) ON DELETE CASCADE ON UPDATE CASCADE,
         CONSTRAINT id_service4 FOREIGN KEY (servicePackage) REFERENCES telcodb.servicePackage (id) ON DELETE CASCADE ON UPDATE CASCADE,

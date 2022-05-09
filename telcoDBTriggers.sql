@@ -10,7 +10,6 @@ after delete on servicePackage
 for each row
 delete from totalPurchasesPerPackage where package = old.name;
 
-#INUTILE
 drop trigger if exists package_updatepkg_totPurchases;
 delimiter $$
 create trigger package_updatepkg_totPurchases
@@ -41,7 +40,7 @@ create trigger package_updateorder_totPurchases
 after update on customOrder
 for each row
 begin
-	if new.isValid = 0 then
+	if new.isValid = 0 and new.isValid <> old.isValid then
 		update totalPurchasesPerPackage set total = total + 1 where package = (select name from servicePackage where id = new.servicePackage);
 	end if;
 end $$
@@ -59,8 +58,6 @@ begin
 end $$
 delimiter ;
 
-#update servicePackage set id = 10 where id = 9; !!! BISOGNA AGGIUNGERE LA CASCADE !!!
-
 drop trigger if exists validity_insert_totPurchasesAndVP;
 create trigger validity_insert_totPurchasesAndVP
 after insert on validityPeriod
@@ -74,8 +71,35 @@ after delete on validityPeriod
 for each row
 delete from totalPurchasesPerPackageAndValidityPeriod where package = (select name from servicePackage where id = old.servicePackage) and validity = old.duration;
 
-/*AFTER UPDATE ON VALIDITY PERIOD?*/
-/* AFTER UPDATE ON SERVICEPACKAGE?*/
+drop trigger if exists validity_updatepkg_totPurchasesAndVP;
+delimiter $$
+create trigger validity_updatepkg_totPurchasesAndVP
+after update on validityPeriod
+for each row
+begin
+	if new.duration <> old.duration then
+		update totalPurchasesPerPackageAndValidityPeriod set validity = new.duration where validity = old.duration and package = (select name from servicePackage where id = old.servicePackage);
+	end if;
+end $$
+delimiter ;
+
+drop trigger if exists package_delete_totPurchasesAndVP;
+create trigger package_delete_totPurchasesAndVP
+after delete on servicePackage
+for each row
+delete from totalPurchasesPerPackageAndValidityPeriod where package = old.name;
+
+drop trigger if exists package_updatepkg_totPurchasesAndVP;
+delimiter $$
+create trigger package_updatepkg_totPurchasesAndVP
+after update on servicePackage
+for each row
+begin
+	if new.name <> old.name then
+		update totalPurchasesPerPackageAndValidityPeriod set package = new.name where package = old.name;
+	end if;
+end $$
+delimiter ;
 
 drop trigger if exists package_insertorder_totPurchasesAndVP;
 delimiter $$
@@ -96,7 +120,7 @@ create trigger package_updateorder_totPurchasesAndVP
 after update on customOrder
 for each row
 begin
-	if new.isValid = 0 then
+	if new.isValid = 0 and new.isValid <> old.isValid then
 		update totalPurchasesPerPackageAndValidityPeriod set total = total + 1 where package = (select name from servicePackage where id = new.servicePackage)
 																			   and validity = (select duration from validityPeriod where id = new.validity);
 	end if;
@@ -128,7 +152,6 @@ after delete on servicePackage
 for each row
 delete from salesValue where package = old.name;
 
-#INUTILE
 drop trigger if exists package_updatepkg_salesValue;
 delimiter $$
 create trigger package_updatepkg_salesValue
@@ -161,7 +184,7 @@ create trigger package_updateorder_salesValue
 after update on customOrder
 for each row
 begin
-	if new.isValid = 0 then
+	if new.isValid = 0 and new.isValid <> old.isValid then
 		update salesValue set totalSale = totalSale + new.totalValue, 
 							  saleWithoutProd = saleWithoutProd + (select fee*duration from validityPeriod v where v.id = new.validity)
 		where package = (select name from servicePackage where id = new.servicePackage);
@@ -187,7 +210,7 @@ drop trigger if exists product_updateoptproduct_avgProdPackage;
 delimiter $$
 create trigger product_updateoptproduct_avgProdPackage
 after insert on selectedProductsForOrder
-for each row #DOVREBBE ESSERE STATEMENT MA NON SUPPPORTATO DA MYSQLproduct_updateoptproduct_avgProdPackageproduct_updateoptproduct_avgProdPackage
+for each row #DOVREBBE ESSERE STATEMENT MA NON SUPPPORTATO DA MYSQL
 begin
 	declare packId int;
 	if (select o.isValid from customOrder o where o.id = new.customOrder) = 0 then
@@ -245,7 +268,7 @@ create trigger order_updateoptproduct_avgProdPackage
 after update on customOrder
 for each row
 begin
-	if new.isValid = 0 then
+	if new.isValid = 0 and new.isValid <> old.isValid then
 		update averageProductsSoldForPackage set averageProducts =
 		( select avg(count) from (  select count(sp.product) as count
 									from customOrder o left join selectedProductsForOrder sp on o.id = sp.customOrder
@@ -267,6 +290,18 @@ create trigger package_deleteoptproduct_avgProdPackage
 after delete on servicePackage
 for each row
 delete from averageProductsSoldForPackage where package = old.name;
+
+drop trigger if exists package_updatepkg_avgProdPackage;
+delimiter $$
+create trigger package_updatepkg_avgProdPackage
+after update on servicePackage
+for each row
+begin
+	if new.name <> old.name then
+		update averageProductsSoldForPackage set package = new.name where package = old.name;
+	end if;
+end $$
+delimiter ;
 
 drop trigger if exists insert_selprod_bestSeller;
 delimiter $$
@@ -302,7 +337,7 @@ begin
 	declare currentMax int;
     declare newValue int;
     declare newProd varchar(50);
-	if new.isValid = 0 then			
+	if new.isValid = 0 and new.isValid <> old.isValid then			
 		set currentMax = (select max(totalSales) from bestSellerProduct);
         set newValue = (select max(val) from (select sum(p.fee*v.duration) as val
 						from customOrder o join selectedProductsForOrder sp on o.id = sp.customOrder
@@ -330,6 +365,24 @@ begin
 	end if;
 end $$
 delimiter ;
+
+drop trigger if exists update_product_bestSeller;
+delimiter $$
+create trigger update_product_bestSeller
+after update on product
+for each row
+begin
+	if new.name <> old.name then
+		update bestSellerProduct set product = new.name where product = old.name;
+	end if;
+end $$
+delimiter ;
+
+drop trigger if exists delete_product_bestSeller;
+create trigger delete_product_bestSeller
+after delete on product
+for each row
+delete from bestSellerProduct where product = old.name;
 
 #select * from totalPurchasesPerPackage;
 #select * from totalPurchasesPerPackageAndValidityPeriod;
